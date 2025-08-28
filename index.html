@@ -1,16 +1,296 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS180 Portfolio</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .header-content {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2d5a27, #4a7c59);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #2d5a27;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+
+        .intro-text {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: #495057;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .projects-section {
+            padding: 40px 0 80px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #2d5a27;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: #4a7c59;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2d5a27, #4a7c59);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-number {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2d5a27, #4a7c59);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(45, 90, 39, 0.3);
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .project-description {
+            color: #6c757d;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .project-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #2d5a27, #4a7c59);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 15px rgba(45, 90, 39, 0.3);
+        }
+
+        .project-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(45, 90, 39, 0.4);
+        }
+
+        .decorative-element {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(45, 90, 39, 0.05), rgba(74, 124, 89, 0.05));
+            z-index: -1;
+        }
+
+        .decorative-element:nth-child(1) {
+            top: 10%;
+            right: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .decorative-element:nth-child(2) {
+            bottom: 10%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .decorative-element {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to My CS180 Portfolio!</h1>
-    <a href="./1/index.html">Project 1</a>
+    <div class="decorative-element"></div>
+    <div class="decorative-element"></div>
+    
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>CS180 Portfolio</h1>
+                <div class="subtitle">Computer Vision & Computational Photography</div>
+                <div class="intro-text">
+                    Welcome to my journey through the fascinating world of computer vision and computational photography. 
+                    Each project represents a deep dive into the algorithms and techniques that power modern visual computing.
+                </div>
+            </div>
+        </header>
+
+        <section class="projects-section">
+            <div class="section-title">Projects</div>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-number">1</div>
+                    <h3 class="project-title">Image Processing Fundamentals</h3>
+                    <p class="project-description">
+                        Exploring the foundations of digital image processing, including filtering, 
+                        edge detection, and basic transformations.
+                    </p>
+                    <a href="./1/index.html" class="project-link">View Project</a>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-number">2</div>
+                    <h3 class="project-title">Coming Soon</h3>
+                    <p class="project-description">
+                        Next project will focus on advanced computer vision techniques and 
+                        their real-world applications.
+                    </p>
+                    <a href="#" class="project-link" style="opacity: 0.5; pointer-events: none;">In Progress</a>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-number">3</div>
+                    <h3 class="project-title">Coming Soon</h3>
+                    <p class="project-description">
+                        Future explorations in computational photography and image synthesis
+                        await in this upcoming project.
+                    </p>
+                    <a href="#" class="project-link" style="opacity: 0.5; pointer-events: none;">In Progress</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 CS180 Portfolio. Crafted with attention to detail.</p>
+        </div>
+    </footer>
 </body>
 </html>
