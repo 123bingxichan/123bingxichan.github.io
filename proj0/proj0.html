@@ -80,17 +80,17 @@
 
         /* Content layout */
         .content-area {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 50px;
-            align-items: start;
-        }
-
-        /* Photo sections on the left */
-        .photo-sections {
             display: flex;
             flex-direction: column;
             gap: 50px;
+        }
+
+        /* Individual part layout */
+        .part-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            align-items: start;
         }
 
         .photo-section {
@@ -147,14 +147,14 @@
 
         .photo-item img {
             display: block;
-            width: 400px;
-            height: 300px;
+            width: 300px;
+            height: 225px;
             object-fit: cover;
         }
 
         .gif-item img {
-            width: 350px;
-            height: 250px;
+            width: 300px;
+            height: 225px;
         }
 
         /* Thumbtacks */
@@ -185,14 +185,7 @@
             border-radius: 50%;
         }
 
-        /* Post-it notes on the right */
-        .notes-section {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            padding-top: 20px;
-        }
-
+        /* Post-it notes */
         .post-it {
             background: linear-gradient(135deg, #FFEB3B 0%, #FFF176 100%);
             padding: 25px;
@@ -202,15 +195,16 @@
                 inset 0 0 0 1px rgba(0,0,0,0.1);
             position: relative;
             transform: rotate(1deg);
-            min-height: 180px;
+            min-height: 200px;
+            align-self: start;
         }
 
-        .post-it:nth-child(even) {
+        .post-it.green {
             background: linear-gradient(135deg, #81C784 0%, #A5D6A7 100%);
             transform: rotate(-1.5deg);
         }
 
-        .post-it:nth-child(3n) {
+        .post-it.orange {
             background: linear-gradient(135deg, #FFB74D 0%, #FFCC02 100%);
             transform: rotate(2deg);
         }
@@ -265,19 +259,19 @@
         }
 
         @media (max-width: 1200px) {
-            .content-area {
+            .part-container {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 20px;
             }
             
             .photo-item img {
-                width: 300px;
-                height: 225px;
+                width: 280px;
+                height: 210px;
             }
             
             .gif-item img {
                 width: 280px;
-                height: 200px;
+                height: 210px;
             }
         }
 
@@ -309,9 +303,8 @@
         </div>
 
         <div class="content-area">
-            <!-- Photos on the left -->
-            <div class="photo-sections">
-                <!-- Part 1: Selfie -->
+            <!-- Part 1: Selfie -->
+            <div class="part-container">
                 <div class="photo-section">
                     <div class="section-title">Part 1: Selfie</div>
                     <div class="photos-row">
@@ -325,8 +318,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="post-it">
+                    <h3>Part 1 Reflection</h3>
+                    <p>The selfie portion of this project helped me understand the basics of camera positioning and lighting. I experimented with different angles and discovered how natural light affects the mood and quality of self-portraits. This exercise taught me the importance of patience and practice in achieving the desired composition.</p>
+                </div>
+            </div>
 
-                <!-- Part 2: Architectural Perspective -->
+            <!-- Part 2: Architectural Perspective -->
+            <div class="part-container">
                 <div class="photo-section">
                     <div class="section-title">Part 2: Architectural Perspective</div>
                     <div class="photos-row">
@@ -340,8 +339,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="post-it green">
+                    <h3>Part 2 Insights</h3>
+                    <p>Exploring architectural perspective opened my eyes to the power of lines and geometry in photography. I learned how different viewpoints can dramatically change the perception of a building's scale and character. The interplay between shadows and structure became a fascinating subject to capture.</p>
+                </div>
+            </div>
 
-                <!-- Part 3: Dolly Zoom -->
+            <!-- Part 3: Dolly Zoom -->
+            <div class="part-container">
                 <div class="photo-section">
                     <div class="section-title">Part 3: Dolly Zoom</div>
                     <div class="photos-row">
@@ -351,21 +356,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Post-it notes on the right -->
-            <div class="notes-section">
-                <div class="post-it">
-                    <h3>Part 1 Reflection</h3>
-                    <p>The selfie portion of this project helped me understand the basics of camera positioning and lighting. I experimented with different angles and discovered how natural light affects the mood and quality of self-portraits. This exercise taught me the importance of patience and practice in achieving the desired composition.</p>
-                </div>
-
-                <div class="post-it">
-                    <h3>Part 2 Insights</h3>
-                    <p>Exploring architectural perspective opened my eyes to the power of lines and geometry in photography. I learned how different viewpoints can dramatically change the perception of a building's scale and character. The interplay between shadows and structure became a fascinating subject to capture.</p>
-                </div>
-
-                <div class="post-it">
+                <div class="post-it orange">
                     <h3>Part 3 Discovery</h3>
                     <p>The dolly zoom technique was the most challenging yet rewarding part of this project. Creating this effect required careful coordination between camera movement and zoom adjustments. It taught me how technical skills can be used to create emotional impact and visual intrigue in storytelling.</p>
                 </div>
