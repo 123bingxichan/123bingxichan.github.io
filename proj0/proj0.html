@@ -1,4 +1,4 @@
-f<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,11 +15,11 @@ f<!DOCTYPE html>
             font-family: 'Georgia', serif;
             background: #8B4513;
             min-height: 100vh;
-            padding: 40px 20px 20px;
+            padding: 20px;
         }
 
         .cork-board {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             background: 
                 radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.3) 1px, transparent 1px),
@@ -35,197 +35,24 @@ f<!DOCTYPE html>
             position: relative;
             min-height: 80vh;
             padding: 40px;
-            transform: perspective(1000px) rotateX(2deg);
         }
 
-        /* Hanging effect with strings */
-        .cork-board::before,
-        .cork-board::after {
-            content: '';
-            position: absolute;
-            top: -30px;
-            width: 2px;
-            height: 30px;
-            background: linear-gradient(to bottom, #654321, #8B4513);
-            box-shadow: inset 1px 0 0 rgba(255,255,255,0.2);
-        }
-
-        .cork-board::before {
-            left: 20%;
-        }
-
-        .cork-board::after {
-            right: 20%;
-        }
-
-        /* Push pins for hanging */
-        .hanging-pin {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: radial-gradient(circle, #C0C0C0 30%, #808080 70%);
-            border-radius: 50%;
-            top: -5px;
-            box-shadow: 
-                0 2px 4px rgba(0,0,0,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.5);
-        }
-
-        .hanging-pin:first-of-type {
-            left: 20%;
-        }
-
-        .hanging-pin:last-of-type {
-            right: 20%;
-        }
-
-        .content-area {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 40px;
-            height: 100%;
-            min-height: 600px;
-        }
-
-        /* Paper note on the left */
-        .project-info {
-            background: 
-                linear-gradient(135deg, #FFFEF7 0%, #FEFCF0 100%);
-            padding: 30px;
-            border-radius: 3px;
-            box-shadow: 
-                0 5px 15px rgba(0,0,0,0.2),
-                inset 0 0 0 1px rgba(0,0,0,0.1);
-            position: relative;
-            transform: rotate(-1deg);
-            height: fit-content;
-        }
-
-        .project-info::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 30px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid #FF6B6B;
-            border-right: 8px solid transparent;
-            border-bottom: 12px solid #FF6B6B;
-            transform: rotate(45deg);
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
-        }
-
-        .project-info h1 {
-            color: #2c3e50;
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            margin-top: 15px;
-            font-family: 'Georgia', serif;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .project-info .subtitle {
-            color: #7f8c8d;
-            font-size: 1rem;
-            margin-bottom: 25px;
-            font-style: italic;
-        }
-
-        .project-info p {
-            color: #34495e;
-            line-height: 1.7;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-
-        .project-info .notes {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .project-info .notes h3 {
-            color: #e74c3c;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-family: 'Georgia', serif;
-        }
-
-        .project-info .notes ul {
-            padding-left: 20px;
-            color: #34495e;
-        }
-
-        .project-info .notes li {
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-
-        /* Photo gallery area */
-        .photo-gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            align-content: flex-start;
-            padding: 20px;
-        }
-
-        .photo-placeholder {
-            width: 200px;
-            height: 150px;
-            background: 
-                linear-gradient(135deg, #FFFEF7 0%, #FEFCF0 100%);
-            border: 2px dashed #bdc3c7;
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #95a5a6;
-            font-style: italic;
-            position: relative;
-            transform: rotate(2deg);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .photo-placeholder:nth-child(even) {
-            transform: rotate(-1.5deg);
-        }
-
-        .photo-placeholder:nth-child(3n) {
-            transform: rotate(1deg);
-        }
-
-        /* Photo with thumbtack */
-        .photo-item {
-            position: relative;
-            display: inline-block;
-            background: white;
-            padding: 8px;
-            box-shadow: 
-                0 4px 12px rgba(0,0,0,0.15),
-                0 2px 4px rgba(0,0,0,0.1);
-            transform: rotate(-2deg);
-        }
-
-        .photo-item:nth-child(even) {
-            transform: rotate(1.5deg);
-        }
-
-        .photo-item:nth-child(3n) {
+        /* Main title at the top */
+        .main-title {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #FFFEF7 0%, #FEFCF0 100%);
+            padding: 20px 40px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transform: rotate(-0.5deg);
+            position: relative;
         }
 
-        .photo-item img {
-            display: block;
-            width: 300px;
-            height: 275px;
-            object-fit: cover;
-        }
-
-        /* Thumbtack */
-        .thumbtack {
+        .main-title::before {
+            content: '';
             position: absolute;
-            top: -5px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             width: 12px;
@@ -234,8 +61,115 @@ f<!DOCTYPE html>
             border-radius: 50%;
             box-shadow: 
                 0 2px 5px rgba(0,0,0,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.4),
-                inset 0 -1px 0 rgba(0,0,0,0.2);
+                inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        .main-title h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            font-family: 'Georgia', serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .main-title .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        /* Content layout */
+        .content-area {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 50px;
+            align-items: start;
+        }
+
+        /* Photo sections on the left */
+        .photo-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .photo-section {
+            position: relative;
+        }
+
+        /* Section titles */
+        .section-title {
+            background: linear-gradient(135deg, #FFF8DC 0%, #F5F5DC 100%);
+            padding: 8px 20px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            transform: rotate(-1deg);
+            display: inline-block;
+            position: relative;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #4CAF50 30%, #388E3C 70%);
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Photo containers */
+        .photos-row {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .photo-item {
+            position: relative;
+            background: white;
+            padding: 12px;
+            box-shadow: 
+                0 5px 20px rgba(0,0,0,0.2),
+                0 2px 6px rgba(0,0,0,0.1);
+            transform: rotate(-1deg);
+        }
+
+        .photo-item:nth-child(even) {
+            transform: rotate(1.5deg);
+        }
+
+        .photo-item img {
+            display: block;
+            width: 400px;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .gif-item img {
+            width: 350px;
+            height: 250px;
+        }
+
+        /* Thumbtacks */
+        .thumbtack {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle, #FF6B6B 30%, #E74C3C 70%);
+            border-radius: 50%;
+            box-shadow: 
+                0 3px 6px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.4);
             z-index: 10;
         }
 
@@ -251,28 +185,60 @@ f<!DOCTYPE html>
             border-radius: 50%;
         }
 
-        /* Sample photo (you can remove this) */
-        .sample-photo {
-            background: white;
-            padding: 8px;
-            box-shadow: 
-                0 4px 12px rgba(0,0,0,0.15),
-                0 2px 4px rgba(0,0,0,0.1);
-            transform: rotate(3deg);
-            position: relative;
+        /* Post-it notes on the right */
+        .notes-section {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding-top: 20px;
         }
 
-        .sample-photo::before {
-            content: 'Sample Photo';
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 200px;
-            height: 150px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
+        .post-it {
+            background: linear-gradient(135deg, #FFEB3B 0%, #FFF176 100%);
+            padding: 25px;
+            border-radius: 3px;
+            box-shadow: 
+                0 4px 12px rgba(0,0,0,0.15),
+                inset 0 0 0 1px rgba(0,0,0,0.1);
+            position: relative;
+            transform: rotate(1deg);
+            min-height: 180px;
+        }
+
+        .post-it:nth-child(even) {
+            background: linear-gradient(135deg, #81C784 0%, #A5D6A7 100%);
+            transform: rotate(-1.5deg);
+        }
+
+        .post-it:nth-child(3n) {
+            background: linear-gradient(135deg, #FFB74D 0%, #FFCC02 100%);
+            transform: rotate(2deg);
+        }
+
+        .post-it::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid rgba(0,0,0,0.1);
+            border-right: 10px solid transparent;
+            border-bottom: 15px solid rgba(0,0,0,0.1);
+            transform: rotate(45deg);
+        }
+
+        .post-it h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-family: 'Georgia', serif;
+        }
+
+        .post-it p {
+            color: #34495e;
+            line-height: 1.6;
+            font-size: 1rem;
         }
 
         /* Back to portfolio link */
@@ -298,66 +264,113 @@ f<!DOCTYPE html>
             transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
             .content-area {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 30px;
             }
             
+            .photo-item img {
+                width: 300px;
+                height: 225px;
+            }
+            
+            .gif-item img {
+                width: 280px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
             .cork-board {
                 padding: 20px;
-                transform: none;
             }
             
-            .photo-gallery {
-                justify-content: center;
+            .photos-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .photo-item img {
+                width: 280px;
+                height: 210px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="hanging-pin"></div>
-    <div class="hanging-pin"></div>
-    
     <a href="../index.html" class="back-link">← Back to Portfolio</a>
     
     <div class="cork-board">
+        <!-- Main title at the top -->
+        <div class="main-title">
+            <h1>Project 0</h1>
+            <div class="subtitle">'Becoming Friends with Your Camera'</div>
+        </div>
+
         <div class="content-area">
-            <div class="project-info">
-                <h1>Project 0</h1>
-                <div class="subtitle">Becoming Friends With your Camera</div>
+            <!-- Photos on the left -->
+            <div class="photo-sections">
+                <!-- Part 1: Selfie -->
+                <div class="photo-section">
+                    <div class="section-title">Part 1: Selfie</div>
+                    <div class="photos-row">
+                        <div class="photo-item">
+                            <div class="thumbtack"></div>
+                            <img src="./IMG_5543.jpeg" alt="Selfie 1">
+                        </div>
+                        <div class="photo-item">
+                            <div class="thumbtack"></div>
+                            <img src="./IMG_5545.jpeg" alt="Selfie 2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: Architectural Perspective -->
+                <div class="photo-section">
+                    <div class="section-title">Part 2: Architectural Perspective</div>
+                    <div class="photos-row">
+                        <div class="photo-item">
+                            <div class="thumbtack"></div>
+                            <img src="./IMG_5569.jpeg" alt="Architecture 1">
+                        </div>
+                        <div class="photo-item">
+                            <div class="thumbtack"></div>
+                            <img src="./IMG_5570.jpeg" alt="Architecture 2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 3: Dolly Zoom -->
+                <div class="photo-section">
+                    <div class="section-title">Part 3: Dolly Zoom</div>
+                    <div class="photos-row">
+                        <div class="photo-item gif-item">
+                            <div class="thumbtack"></div>
+                            <img src="./ezgif.com-animated-gif-maker.gif" alt="Dolly Zoom GIF">
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="photo-gallery">
-                <!-- Your photos from the directory -->
-                <div class="photo-item">
-                    <div class="thumbtack"></div>
-                    <img src="./IMG_5543.jpeg" alt="Photo 5543">
+
+            <!-- Post-it notes on the right -->
+            <div class="notes-section">
+                <div class="post-it">
+                    <h3>Part 1 Reflection</h3>
+                    <p>The selfie portion of this project helped me understand the basics of camera positioning and lighting. I experimented with different angles and discovered how natural light affects the mood and quality of self-portraits. This exercise taught me the importance of patience and practice in achieving the desired composition.</p>
                 </div>
-                
-                <div class="photo-item">
-                    <div class="thumbtack"></div>
-                    <img src="./IMG_5545.jpeg" alt="Photo 5545">
+
+                <div class="post-it">
+                    <h3>Part 2 Insights</h3>
+                    <p>Exploring architectural perspective opened my eyes to the power of lines and geometry in photography. I learned how different viewpoints can dramatically change the perception of a building's scale and character. The interplay between shadows and structure became a fascinating subject to capture.</p>
                 </div>
-                
-                <div class="photo-item">
-                    <div class="thumbtack"></div>
-                    <img src="./IMG_5569.jpeg" alt="Photo 5569">
-                </div>
-                
-                <div class="photo-item">
-                    <div class="thumbtack"></div>
-                    <img src="./IMG_5570.jpeg" alt="Photo 5570">
-                </div>
-                
-                <div class="photo-item">
-                    <div class="thumbtack"></div>
-                    <img src="./ezgif.com-animated-gif-maker.gif" alt="Animated GIF">
+
+                <div class="post-it">
+                    <h3>Part 3 Discovery</h3>
+                    <p>The dolly zoom technique was the most challenging yet rewarding part of this project. Creating this effect required careful coordination between camera movement and zoom adjustments. It taught me how technical skills can be used to create emotional impact and visual intrigue in storytelling.</p>
                 </div>
             </div>
         </div>
     </div>
 </body>
 </html>
-
-
