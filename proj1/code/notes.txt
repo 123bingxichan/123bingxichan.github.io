@@ -1,0 +1,4 @@
+First idea:
+
+Aside from the brute force given, just find the black bars between the BGR, then frame the image and paste, see result.
+
