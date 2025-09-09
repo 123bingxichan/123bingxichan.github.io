@@ -1,4 +1,9 @@
-First idea:
+Notes on naive implementation:
+Has a little cool distortion effect, but obviously has some bad overlapping when looking at the r g and b, 
+leading to the random green, yellow, blue lines throughout the image. 
 
-Aside from the brute force given, just find the black bars between the BGR, then frame the image and paste, see result.
+Next simplest idea:
+What I imagined was getting a pair of scissors and slicing through each of the horizontal black bars then laying all images together, which can be done computationally.
+find the black bars between the BGR, then frame the image according to border detection
 
+Idea: sort the rows on the sum of the row, rows with min val should be all black.
