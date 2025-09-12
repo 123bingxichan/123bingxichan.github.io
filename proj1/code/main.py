@@ -6,15 +6,15 @@
 import numpy as np
 import skimage as sk
 import skimage.io as skio
+import os
+# # name of the input file
+# imname = '../images/cathedral.jpg'
 
-# name of the input file
-imname = '../images/cathedral.jpg'
+# # read in the image
+# im = skio.imread(imname)
 
-# read in the image
-im = skio.imread(imname)
-
-# convert to double (might want to do this later on to save memory)    
-im = sk.img_as_float(im)
+# # convert to double (might want to do this later on to save memory)    
+# im = sk.img_as_float(im)
 
 def naive_align(im):
     
@@ -77,8 +77,66 @@ def border_align(im):
     
     im_out = np.dstack([r, g, b])
     return im_out        
-    
-def save_output_im(im_out, fname):
+
+def l2_align(im, max_disp_x, max_disp_y):
+    """
+    Align R and G channels to B using L2 norm minimization.
+    B is always the reference channel.
+    """
+    aligned_im = border_align(im)
+
+    r_channel = aligned_im[:, :, 0]
+    g_channel = aligned_im[:, :, 1]
+    b_channel = aligned_im[:, :, 2]
+
+    best_r = (np.inf, 0, 0, r_channel)  # (loss, dx, dy, shifted_crop)
+    best_g = (np.inf, 0, 0, g_channel)
+
+    for dx in range(-max_disp_x, max_disp_x + 1):
+        for dy in range(-max_disp_y, max_disp_y + 1):
+            # shift by (dy, dx)
+            r_shift = np.roll(r_channel, shift=(dy, dx), axis=(0, 1))
+            g_shift = np.roll(g_channel, shift=(dy, dx), axis=(0, 1))
+
+            # crop overlapping region between shifted and reference (b)
+            if dx >= 0:
+                x_slice = slice(dx, None)
+            else:
+                x_slice = slice(0, dx)
+            if dy >= 0:
+                y_slice = slice(dy, None)
+            else:
+                y_slice = slice(0, dy)
+
+            r_crop = r_shift[y_slice, x_slice]
+            g_crop = g_shift[y_slice, x_slice]
+            b_crop = b_channel[y_slice, x_slice]
+
+            # compute L2 loss normalized by pixels
+            r_loss = np.linalg.norm(b_crop - r_crop) / b_crop.size
+            g_loss = np.linalg.norm(b_crop - g_crop) / b_crop.size
+
+            if r_loss < best_r[0]:
+                best_r = (r_loss, dx, dy, r_crop.copy())
+            if g_loss < best_g[0]:
+                best_g = (g_loss, dx, dy, g_crop.copy())
+
+    # crop all to smallest common size
+    min_height = min(best_r[3].shape[0], best_g[3].shape[0], b_channel.shape[0])
+    min_width  = min(best_r[3].shape[1], best_g[3].shape[1], b_channel.shape[1])
+
+    im_out = np.dstack([
+        best_r[3][:min_height, :min_width],
+        best_g[3][:min_height, :min_width],
+        b_channel[:min_height, :min_width]
+    ])
+
+    print("Best R shift:", best_r[1:3], "Loss:", best_r[0])
+    print("Best G shift:", best_g[1:3], "Loss:", best_g[0])
+
+    return im_out
+
+def save_output_im(im_out, fname):  
     """Saves an image and outputs it
 
     Inputs:
@@ -101,4 +159,14 @@ def save_output_im(im_out, fname):
 #save_output_im(naive_align(im), 'naive_stack')
 
 #try border:
-save_output_im(border_align(im), 'border_stack')
+# save_output_im(border_align(im), 'border_stack')
+
+#try l2
+# save_output_im(l2_align(im,30,30), 'l2_try22')
+
+#apply to all files in the images folder:
+for file in os.listdir('../images'):
+    if file.endswith('.jpg'):
+        im = skio.imread(f'../images/{file}')
+        im = sk.img_as_float(im)
+        save_output_im(l2_align(im,30,30), f'../images/final/l2_{file}')
