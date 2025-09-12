@@ -1,20 +1,8 @@
-# CS194-26 (CS294-26): Project 1 starter Python code
-
-# these are just some suggested libraries
-# instead of scikit-image you could use matplotlib and opencv to read, write, and display images
-
 import numpy as np
+import scipy.ndimage
 import skimage as sk
 import skimage.io as skio
 import os
-# # name of the input file
-# imname = '../images/cathedral.jpg'
-
-# # read in the image
-# im = skio.imread(imname)
-
-# # convert to double (might want to do this later on to save memory)    
-# im = sk.img_as_float(im)
 
 def naive_align(im):
     
@@ -135,6 +123,35 @@ def l2_align(im, max_disp_x, max_disp_y):
     print("Best G shift:", best_g[1:3], "Loss:", best_g[0])
 
     return im_out
+
+def pyramid(im, k,s ,filter_type='gauss'):
+    """
+    Create a pyramid of images of im with a kernel of size s x s
+
+    Args:
+        im: image to create pyramid of
+        k: number of levels in the pyramid
+        s: size of the kernel
+        filter_type: type of filter to use
+
+    Outputs:
+        pyramid: list of images
+    """
+    if filter_type == 'gauss':
+       filter= scipy.ndimage.gaussian_filter
+    # elif filter_type == 'mean':
+    #     filter= scipy.ndimage.uniform_filter
+    else:
+        raise ValueError(f"Invalid filter type {filter_type}")
+
+    if k == 1:
+        return [im[::2,::2]]
+    #filter image w filter
+    im = filter(im, sigma=s)
+        
+    #begin subsampling
+    subsample = im[::2,::2]
+    return [subsample] + pyramid(subsample, k-1, s, filter_type)
 
 def save_output_im(im_out, fname):  
     """Saves an image and outputs it
