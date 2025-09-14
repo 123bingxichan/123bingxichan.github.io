@@ -321,6 +321,8 @@
         <div class="notes-section">
             <h3>Overview</h3>
             <p>This project focuses on the digital restoration and colorization of historical photographs from the Prokudin-Gorskii collection. These images were captured using a unique three-color separation technique in the early 1900s, requiring sophisticated alignment algorithms to reconstruct the original full-color photographs.</p>
+            <p>Sergei Mikhailovich Prokudin-Gorskii was a Russian photographer who pioneered color photography by taking three separate exposures through red, green, and blue filters. The resulting glass plates contained three grayscale images that, when properly aligned and combined, revealed the true colors of pre-revolutionary Russia.</p>
+            <p>Modern digital processing allows us to reconstruct these historical images with unprecedented accuracy, preserving the cultural heritage and artistic vision of this remarkable photographer while showcasing the technological innovation of his time.</p>
             <ul>
                 <li>Analysis of RGB channel separation in historical photography</li>
                 <li>Development of robust alignment algorithms for color channel registration</li>
@@ -333,7 +335,8 @@
         <div class="notes-section">
             <h3>Cropping and Preprocessing</h3>
             <p>The first preprocessing step was to separate the image into three sections to align. The naive separation of thirds is inaccurate, so I imagined grabbing the image in real life and slicing the black parts. The more naive way to cut the intermediate black borders was to take the lowest sums of the rows and select k rows to cut. This was very naive and caused some problems later as it assumes the border will always be the darkest which may not necessarily be true, but I did try to make it slightly more robust to use in the final algorithm.</p>
-            <p>Additionally, I thought about other more intelligent ways to crop the image, which include taking standard deviation, but what worked the best was removing a percentile of rows based on their brightness values, which helped remove the black and white borders of the photos.</p>
+            <p>Additionally, I thought about other more intelligent ways to crop the image, which include taking standard deviation, but what worked the best was removing a percentile of rows based on their brightness values, which helped remove the black and white borders of the photos. This approach proved more reliable because it could handle variations in border darkness and adapt to different image characteristics.</p>
+            <p>The preprocessing stage is crucial because any errors in border detection or channel separation compound throughout the alignment process, making it essential to get this foundation right before attempting more complex alignment algorithms.</p>
             <ul>
                 <li>Initial naive approach: simple division into thirds</li>
                 <li>Row sum analysis for border detection</li>
@@ -376,6 +379,8 @@
         <div class="notes-section">
             <h3>Initial Alignment Algorithm</h3>
             <p>I implemented the initial alignment by taking the cropping and preprocessing results and scanned over a window of displacement values based on L2 loss. I would cut the images, search, and use the minimal displacement. However while the theoretical algorithm sounds simple, I struggled heavily with all of the cropping I had to do and spent time verifying all the cropping. The initial results on the JPEGs are acceptable.</p>
+            <p>The L2 loss function measures the sum of squared differences between corresponding pixels in the blue channel (used as reference) and the red/green channels at different displacement offsets. By systematically testing displacement vectors within a reasonable range, the algorithm finds the offset that minimizes this loss, indicating the best alignment position.</p>
+            <p>While this brute-force approach works well for initial alignment, it's computationally expensive and can miss subtle misalignments that require more sophisticated techniques. The exhaustive search becomes particularly challenging when dealing with high-resolution images or when the displacement range needs to be large.</p>
             <ul>
                 <li>L2 loss minimization for displacement optimization</li>
                 <li>Exhaustive search over displacement window ranges</li>
@@ -418,6 +423,8 @@
         <div class="notes-section">
             <h3>Final Alignment and Refinement</h3>
             <p>I implemented the photo pyramids, which applies a Gaussian filter then downsamples the image. Then ran L2 alignment with different K (levels of pyramid), and here I struggled with a lot of cropping, but after implementing the new algorithms it helped immensely. This image pyramid sped up the search from over 30 minutes to just about 3. These are the final images, so please enjoy!</p>
+            <p>The image pyramid approach works by creating multiple scaled versions of the original image, starting from the coarsest resolution and working up to the finest. At each level, the algorithm performs alignment with a smaller search space, using the results from the previous level as a starting point for the next finer level.</p>
+            <p>This hierarchical approach dramatically reduces computational complexity because the coarse levels eliminate most of the search space, while the fine levels provide precise alignment. The Gaussian filtering ensures smooth transitions between pyramid levels and helps reduce noise that could interfere with the alignment process.</p>
             <ul>
                 <li>Gaussian filtering and image downsampling for pyramid construction</li>
                 <li>Multi-level pyramid alignment with different K values</li>
@@ -524,6 +531,8 @@
         <div class="notes-section">
             <h3>Selected Images from the Collection</h3>
             <p>Here are some additional selected images from the Prokudin-Gorskii collection that showcase the diversity and beauty of the historical photographs. Each image represents a unique moment captured through the innovative three-color separation technique.</p>
+            <p>These final examples demonstrate the wide range of subjects that Prokudin-Gorskii documented, from agricultural scenes and industrial architecture to religious artifacts. The successful colorization of these images brings to life the rich cultural heritage of pre-revolutionary Russia.</p>
+            <p>The precision of the alignment algorithm is evident in the sharp, vibrant colors and the absence of chromatic artifacts that would indicate misalignment between the color channels. Each image tells a story of both the historical moment it captures and the technological achievement of its reconstruction.</p>
         </div>
 
         <!-- Selected Images Photos -->
