@@ -12,3 +12,62 @@ Monastery: R:(1,9), G:(0,-6)
 Tobolsk: R: (3,-6), G: (2,-9)
 
 Show that the pyramid sampling of emir is working
+
+
+$ python main.py
+Now aligning:  cathedral.jpg
+Too much image lost, returning naive_align
+C:\Users\123bi\123bingxichan.github.io\proj1\code\main.py:167: RuntimeWarning: Mean of empty slice.
+  r_ncc = np.sum((b_crop - b_crop.mean()) * (r_crop - r_crop.mean()))  
+C:\Users\123bi\miniconda3\envs\cs\lib\site-packages\numpy\core\_methods.py:129: RuntimeWarning: invalid value encountered in scalar divide    
+  ret = ret.dtype.type(ret / rcount)
+C:\Users\123bi\123bingxichan.github.io\proj1\code\main.py:168: RuntimeWarning: Mean of empty slice.
+  r_ncc /= (np.sqrt(np.sum((b_crop - b_crop.mean())**2)) * np.sqrt(np.sum((r_crop - r_crop.mean())**2)) + 1e-8)
+C:\Users\123bi\123bingxichan.github.io\proj1\code\main.py:194: RuntimeWarning: Mean of empty slice.
+  g_ncc = np.sum((b_crop - b_crop.mean()) * (g_crop - g_crop.mean()))  
+C:\Users\123bi\123bingxichan.github.io\proj1\code\main.py:195: RuntimeWarning: Mean of empty slice.
+  g_ncc /= (np.sqrt(np.sum((b_crop - b_crop.mean())**2)) * np.sqrt(np.sum((g_crop - g_crop.mean())**2)) + 1e-8)
+best r and g vectors:  (0, 136) (0, 153)
+Now aligning:  church.tif
+best r and g vectors:  (-3, -261) (0, -281)
+Now aligning:  emir.tif
+No two borders found, returning naive_align
+best r and g vectors:  (-273, -98) (12, -136)
+Now aligning:  harvesters.tif
+No two borders found, returning naive_align
+best r and g vectors:  (7, -259) (8, -131)
+Now aligning:  icon.tif
+best r and g vectors:  (11, -201) (8, -222)
+Now aligning:  italil.tif
+No two borders found, returning naive_align
+best r and g vectors:  (17, -285) (10, -143)
+Now aligning:  lastochikino.tif
+No two borders found, returning naive_align
+best r and g vectors:  (-4, -287) (-1, -163)
+Now aligning:  lugano.tif
+No two borders found, returning naive_align
+best r and g vectors:  (-228, -97) (-8, -142)
+Now aligning:  melons.tif
+No two borders found, returning naive_align
+best r and g vectors:  (6, -235) (4, -120)
+Now aligning:  monastery.jpg
+No two borders found, returning naive_align
+best r and g vectors:  (-20, 145) (0, 153)
+C:\Users\123bi\123bingxichan.github.io\proj1\code\main.py:325: UserWarning: ../images/../images/final/full_run2/pyramid_monastery.jpg.jpg is a low contrast image
+  skio.imsave(fname,im_out)
+Now aligning:  self_portrait.tif
+best r and g vectors:  (18, -192) (14, -224)
+Now aligning:  siren.tif
+No two borders found, returning naive_align
+best r and g vectors:  (-12, -276) (-3, -137)
+Now aligning:  smart_border_rem_try1.jpg
+No two borders found, returning naive_align
+best r and g vectors:  (-18, 97) (0, 128)
+C:\Users\123bi\123bingxichan.github.io\proj1\code\main.py:325: UserWarning: ../images/../images/final/full_run2/pyramid_smart_border_rem_try1.jpg.jpg is a low contrast image
+  skio.imsave(fname,im_out)
+Now aligning:  three_generations.tif
+Too much image lost, returning naive_align
+best r and g vectors:  (5, -265) (6, -134)
+Now aligning:  tobolsk.jpg
+No two borders found, returning naive_align
+best r and g vectors:  (0, 135) (0, 153)

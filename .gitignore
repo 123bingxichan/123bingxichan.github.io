@@ -1,1 +1,22 @@
-proj1\images
+# Ignore all images except those used in HTML
+proj1/images/**
+!proj1/images/final/naive_stack.jpg
+!proj1/images/final/border_stack.jpg
+!proj1/images/smart_border_rem_try1.jpg
+!proj1/images/final/full_run2/l2_cathedral.jpg
+!proj1/images/final/full_run2/l2_monastery.jpg
+!proj1/images/final/full_run2/l2_tobolsk.jpg
+!proj1/images/final/full_run2/pyramid_church.tif.jpg
+!proj1/images/final/full_run2/pyramid_emir.tif.jpg
+!proj1/images/final/full_run2/pyramid_harvesters.tif.jpg
+!proj1/images/final/full_run2/pyramid_icon.tif.jpg
+!proj1/images/final/full_run2/pyramid_italil.tif.jpg
+!proj1/images/final/full_run2/pyramid_lastochikino.tif.jpg
+!proj1/images/final/full_run2/pyramid_lugano.tif.jpg
+!proj1/images/final/full_run2/pyramid_melons.tif.jpg
+!proj1/images/final/full_run2/pyramid_self_portrait.tif.jpg
+!proj1/images/final/full_run2/pyramid_siren.tif.jpg
+!proj1/images/final/full_run2/pyramid_three_generations.tif.jpg
+!proj1/images/final/full_run2/pyramid_seeds.tif.jpg
+!proj1/images/final/full_run2/pyramid_mill.tif.jpg
+!proj1/images/final/full_run2/pyramid_bible.tif.jpg

@@ -357,7 +357,7 @@ for file in os.listdir(selected_dir):
     im = skio.imread(f'{selected_dir}/{file}')
     im = sk.img_as_float(im)
     print('Now aligning: ', file)
-    save_output_im(pyramid_align(im,k,3, naive_align)[0],f'../images/final/pyramid_aligned/pyramid_{file}')
+    save_output_im(pyramid_align(im,k,3, naive_align)[0],f'../images/final/full_run2/pyramid_{file}')
 
 #Verify pyramid
 # p = pyramid(im,7,5)[3:]

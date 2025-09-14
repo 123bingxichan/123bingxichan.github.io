@@ -332,12 +332,13 @@
         <!-- Cropping Section -->
         <div class="notes-section">
             <h3>Cropping and Preprocessing</h3>
-            <p>The first step in processing Prokudin-Gorskii images involves careful cropping and preprocessing to isolate the three color channels and remove border artifacts. This preprocessing is crucial for accurate alignment and final image quality.</p>
+            <p>The first preprocessing step was to separate the image into three sections to align. The naive separation of thirds is inaccurate, so I imagined grabbing the image in real life and slicing the black parts. The more naive way to cut the intermediate black borders was to take the lowest sums of the rows and select k rows to cut. This was very naive and caused some problems later as it assumes the border will always be the darkest which may not necessarily be true, but I did try to make it slightly more robust to use in the final algorithm.</p>
+            <p>Additionally, I thought about other more intelligent ways to crop the image, which include taking standard deviation, but what worked the best was removing a percentile of rows based on their brightness values, which helped remove the black and white borders of the photos.</p>
             <ul>
-                <li>Border detection and removal techniques</li>
-                <li>Channel separation and individual processing</li>
-                <li>Noise reduction and image enhancement</li>
-                <li>Preparation for alignment algorithms</li>
+                <li>Initial naive approach: simple division into thirds</li>
+                <li>Row sum analysis for border detection</li>
+                <li>Brightness percentile-based cropping</li>
+                <li>Robustness improvements for edge cases</li>
             </ul>
         </div>
 
@@ -348,16 +349,24 @@
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add cropped<br>RGB channels here</div>
-                        <div class="photo-caption">Cropped RGB Channels</div>
+                        <img src="../../proj1/images/final/naive_stack.jpg" alt="Naive alignment thirds">
+                        <div class="photo-caption">Naive alignment (thirds)</div>
                     </div>
                 </div>
                 
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add border<br>removal results here</div>
-                        <div class="photo-caption">Border Removal Results</div>
+                        <img src="../../proj1/images/final/border_stack.jpg" alt="Cutting inner borders alignment">
+                        <div class="photo-caption">Cutting the inner borders alignment</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/smart_border_rem_try1.jpg" alt="Percentile outer border removal">
+                        <div class="photo-caption">Percentile outer border removal</div>
                     </div>
                 </div>
             </div>
@@ -366,12 +375,12 @@
         <!-- Initial Alignment Section -->
         <div class="notes-section">
             <h3>Initial Alignment Algorithm</h3>
-            <p>The initial alignment phase uses basic correlation techniques to roughly align the color channels. This serves as a starting point for more sophisticated alignment methods and helps identify the general displacement patterns between channels.</p>
+            <p>I implemented the initial alignment by taking the cropping and preprocessing results and scanned over a window of displacement values based on L2 loss. I would cut the images, search, and use the minimal displacement. However while the theoretical algorithm sounds simple, I struggled heavily with all of the cropping I had to do and spent time verifying all the cropping. The initial results on the JPEGs are acceptable.</p>
             <ul>
-                <li>Exhaustive search over displacement ranges</li>
-                <li>Normalized cross-correlation for similarity measurement</li>
-                <li>Edge detection and feature-based alignment</li>
-                <li>Initial displacement vector estimation</li>
+                <li>L2 loss minimization for displacement optimization</li>
+                <li>Exhaustive search over displacement window ranges</li>
+                <li>Image cutting and verification challenges</li>
+                <li>Acceptable results on JPEG format images</li>
             </ul>
         </div>
 
@@ -382,16 +391,24 @@
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add initial<br>alignment results here</div>
-                        <div class="photo-caption">Initial Alignment 1</div>
+                        <img src="../../proj1/images/final/full_run2/l2_cathedral.jpg" alt="L2 Cathedral alignment">
+                        <div class="photo-caption">L2 Cathedral - R:(-12,-5) ,G:(-5,-3)</div>
                     </div>
                 </div>
                 
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add alignment<br>visualization here</div>
-                        <div class="photo-caption">Alignment Visualization</div>
+                        <img src="../../proj1/images/final/full_run2/l2_monastery.jpg" alt="L2 Monastery alignment">
+                        <div class="photo-caption">L2 Monastery - R:(1,9), G:(0,-6)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/l2_tobolsk.jpg" alt="L2 Tobolsk alignment">
+                        <div class="photo-caption">L2 Tobolsk - R:(3,-6), G:(2,-9)</div>
                     </div>
                 </div>
             </div>
@@ -400,12 +417,12 @@
         <!-- Final Alignment Section -->
         <div class="notes-section">
             <h3>Final Alignment and Refinement</h3>
-            <p>The final alignment phase refines the initial results using more sophisticated techniques. This includes multi-scale alignment, gradient-based optimization, and edge-aware algorithms to achieve precise color channel registration.</p>
+            <p>I implemented the photo pyramids, which applies a Gaussian filter then downsamples the image. Then ran L2 alignment with different K (levels of pyramid), and here I struggled with a lot of cropping, but after implementing the new algorithms it helped immensely. This image pyramid sped up the search from over 30 minutes to just about 3. These are the final images, so please enjoy!</p>
             <ul>
-                <li>Multi-scale pyramid alignment for robustness</li>
-                <li>Gradient descent optimization for fine-tuning</li>
-                <li>Edge-aware correlation and feature matching</li>
-                <li>Quality assessment and artifact minimization</li>
+                <li>Gaussian filtering and image downsampling for pyramid construction</li>
+                <li>Multi-level pyramid alignment with different K values</li>
+                <li>Significant performance improvement: 30+ minutes to ~3 minutes</li>
+                <li>Final colorized results with precise channel registration</li>
             </ul>
         </div>
 
@@ -416,24 +433,124 @@
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add final<br>colorized image here</div>
-                        <div class="photo-caption">Final Colorized Image 1</div>
+                        <img src="../../proj1/images/final/full_run2/pyramid_church.tif.jpg" alt="Pyramid Church alignment">
+                        <div class="photo-caption">Pyramid Church - R:(-3,-261), G:(0,-281)</div>
                     </div>
                 </div>
                 
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add final<br>colorized image here</div>
-                        <div class="photo-caption">Final Colorized Image 2</div>
+                        <img src="../../proj1/images/final/full_run2/pyramid_emir.tif.jpg" alt="Pyramid Emir alignment">
+                        <div class="photo-caption">Pyramid Emir - R:(-273,-98), G:(12,-136)</div>
                     </div>
                 </div>
                 
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add comparison<br>or additional<br>result here</div>
-                        <div class="photo-caption">Before/After Comparison</div>
+                        <img src="../../proj1/images/final/full_run2/pyramid_harvesters.tif.jpg" alt="Pyramid Harvesters alignment">
+                        <div class="photo-caption">Pyramid Harvesters - R:(7,-259), G:(8,-131)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_icon.tif.jpg" alt="Pyramid Icon alignment">
+                        <div class="photo-caption">Pyramid Icon - R:(11,-201), G:(8,-222)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_italil.tif.jpg" alt="Pyramid Italil alignment">
+                        <div class="photo-caption">Pyramid Italil - R:(17,-285), G:(10,-143)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_lastochikino.tif.jpg" alt="Pyramid Lastochikino alignment">
+                        <div class="photo-caption">Pyramid Lastochikino - R:(-4,-287), G:(-1,-163)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_lugano.tif.jpg" alt="Pyramid Lugano alignment">
+                        <div class="photo-caption">Pyramid Lugano - R:(-228,-97), G:(-8,-142)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_melons.tif.jpg" alt="Pyramid Melons alignment">
+                        <div class="photo-caption">Pyramid Melons - R:(6,-235), G:(4,-120)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_self_portrait.tif.jpg" alt="Pyramid Self Portrait alignment">
+                        <div class="photo-caption">Pyramid Self Portrait - R:(18,-192), G:(14,-224)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_siren.tif.jpg" alt="Pyramid Siren alignment">
+                        <div class="photo-caption">Pyramid Siren - R:(-12,-276), G:(-3,-137)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_three_generations.tif.jpg" alt="Pyramid Three Generations alignment">
+                        <div class="photo-caption">Pyramid Three Generations - R:(5,-265), G:(6,-134)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selected Images Section -->
+        <div class="notes-section">
+            <h3>Selected Images from the Collection</h3>
+            <p>Here are some additional selected images from the Prokudin-Gorskii collection that showcase the diversity and beauty of the historical photographs. Each image represents a unique moment captured through the innovative three-color separation technique.</p>
+        </div>
+
+        <!-- Selected Images Photos -->
+        <div class="clothesline">
+            <div class="section-title">Selected Images from the Collection</div>
+            <div class="photos-container">
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_seeds.tif.jpg" alt="Pyramid Seeds from Prokudin-Gorskii collection">
+                        <div class="photo-caption">Pyramid Seeds - R:(-40,-242), G:(-19,-149)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_mill.tif.jpg" alt="Pyramid Mill from Prokudin-Gorskii collection">
+                        <div class="photo-caption">Pyramid Mill - R:(9,-268), G:(7,-134)</div>
+                    </div>
+                </div>
+                
+                <div class="photo-group">
+                    <div class="clip"></div>
+                    <div class="photo-item">
+                        <img src="../../proj1/images/final/full_run2/pyramid_bible.tif.jpg" alt="Pyramid Bible from Prokudin-Gorskii collection">
+                        <div class="photo-caption">Pyramid Bible - R:(-13,-244), G:(-6,-260)</div>
                     </div>
                 </div>
             </div>
