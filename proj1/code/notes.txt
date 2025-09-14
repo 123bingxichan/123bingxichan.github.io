@@ -7,3 +7,8 @@ What I imagined was getting a pair of scissors and slicing through each of the h
 find the black bars between the BGR, then frame the image according to border detection
 
 Idea: sort the rows on the sum of the row, rows with min val should be all black.
+
+Monastery: R:(1,9), G:(0,-6)
+Tobolsk: R: (3,-6), G: (2,-9)
+
+Show that the pyramid sampling of emir is working
