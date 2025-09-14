@@ -317,80 +317,106 @@
             <div class="subtitle">Prokudin-Gorskii Photo Collection</div>
         </div>
 
-        <!-- Part 1: Original Images -->
+        <!-- Overview Section -->
+        <div class="notes-section">
+            <h3>Overview</h3>
+            <p>This project focuses on the digital restoration and colorization of historical photographs from the Prokudin-Gorskii collection. These images were captured using a unique three-color separation technique in the early 1900s, requiring sophisticated alignment algorithms to reconstruct the original full-color photographs.</p>
+            <ul>
+                <li>Analysis of RGB channel separation in historical photography</li>
+                <li>Development of robust alignment algorithms for color channel registration</li>
+                <li>Quality assessment and artifact removal techniques</li>
+                <li>Historical significance and preservation of cultural heritage</li>
+            </ul>
+        </div>
+
+        <!-- Cropping Section -->
+        <div class="notes-section">
+            <h3>Cropping and Preprocessing</h3>
+            <p>The first step in processing Prokudin-Gorskii images involves careful cropping and preprocessing to isolate the three color channels and remove border artifacts. This preprocessing is crucial for accurate alignment and final image quality.</p>
+            <ul>
+                <li>Border detection and removal techniques</li>
+                <li>Channel separation and individual processing</li>
+                <li>Noise reduction and image enhancement</li>
+                <li>Preparation for alignment algorithms</li>
+            </ul>
+        </div>
+
+        <!-- Cropping Photos -->
         <div class="clothesline">
-            <div class="section-title">Part 1: Original RGB Separated Images</div>
+            <div class="section-title">Cropping and Preprocessing Results</div>
             <div class="photos-container">
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <!-- Replace with your image -->
-                        <div class="photo-placeholder">Add your original<br>separated RGB image here</div>
-                        <div class="photo-caption">Original Separated Image 1</div>
+                        <div class="photo-placeholder">Add cropped<br>RGB channels here</div>
+                        <div class="photo-caption">Cropped RGB Channels</div>
                     </div>
                 </div>
                 
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add your original<br>separated RGB image here</div>
-                        <div class="photo-caption">Original Separated Image 2</div>
+                        <div class="photo-placeholder">Add border<br>removal results here</div>
+                        <div class="photo-caption">Border Removal Results</div>
                     </div>
                 </div>
             </div>
-            
-            <div class="notes-section">
-                <h3>Original Images Notes</h3>
-                <p>Add your notes about the original Prokudin-Gorskii separated RGB images here. Describe the source, condition, and any initial observations.</p>
-                <ul>
-                    <li>Image source and collection details</li>
-                    <li>Initial quality assessment</li>
-                    <li>Separation characteristics observed</li>
-                </ul>
-            </div>
         </div>
 
-        <!-- Part 2: Algorithm Implementation -->
+        <!-- Initial Alignment Section -->
+        <div class="notes-section">
+            <h3>Initial Alignment Algorithm</h3>
+            <p>The initial alignment phase uses basic correlation techniques to roughly align the color channels. This serves as a starting point for more sophisticated alignment methods and helps identify the general displacement patterns between channels.</p>
+            <ul>
+                <li>Exhaustive search over displacement ranges</li>
+                <li>Normalized cross-correlation for similarity measurement</li>
+                <li>Edge detection and feature-based alignment</li>
+                <li>Initial displacement vector estimation</li>
+            </ul>
+        </div>
+
+        <!-- Initial Alignment Photos -->
         <div class="clothesline">
-            <div class="section-title">Part 2: Algorithm Development</div>
+            <div class="section-title">Initial Alignment Results</div>
             <div class="photos-container">
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add algorithm<br>visualization or<br>test results here</div>
-                        <div class="photo-caption">Algorithm Test 1</div>
+                        <div class="photo-placeholder">Add initial<br>alignment results here</div>
+                        <div class="photo-caption">Initial Alignment 1</div>
                     </div>
                 </div>
                 
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add algorithm<br>comparison or<br>iteration here</div>
-                        <div class="photo-caption">Algorithm Test 2</div>
+                        <div class="photo-placeholder">Add alignment<br>visualization here</div>
+                        <div class="photo-caption">Alignment Visualization</div>
                     </div>
                 </div>
             </div>
-            
-            <div class="notes-section">
-                <h3>Algorithm Implementation Notes</h3>
-                <p>Document your algorithm development process, including alignment techniques, correlation methods, and optimization strategies.</p>
-                <ul>
-                    <li>Alignment algorithm approach</li>
-                    <li>Correlation metrics used</li>
-                    <li>Performance optimizations</li>
-                    <li>Challenges encountered</li>
-                </ul>
-            </div>
         </div>
 
-        <!-- Part 3: Final Results -->
+        <!-- Final Alignment Section -->
+        <div class="notes-section">
+            <h3>Final Alignment and Refinement</h3>
+            <p>The final alignment phase refines the initial results using more sophisticated techniques. This includes multi-scale alignment, gradient-based optimization, and edge-aware algorithms to achieve precise color channel registration.</p>
+            <ul>
+                <li>Multi-scale pyramid alignment for robustness</li>
+                <li>Gradient descent optimization for fine-tuning</li>
+                <li>Edge-aware correlation and feature matching</li>
+                <li>Quality assessment and artifact minimization</li>
+            </ul>
+        </div>
+
+        <!-- Final Results Photos -->
         <div class="clothesline">
-            <div class="section-title">Part 3: Colorized Results</div>
+            <div class="section-title">Final Colorized Results</div>
             <div class="photos-container">
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add your final<br>colorized image here</div>
+                        <div class="photo-placeholder">Add final<br>colorized image here</div>
                         <div class="photo-caption">Final Colorized Image 1</div>
                     </div>
                 </div>
@@ -398,7 +424,7 @@
                 <div class="photo-group">
                     <div class="clip"></div>
                     <div class="photo-item">
-                        <div class="photo-placeholder">Add your final<br>colorized image here</div>
+                        <div class="photo-placeholder">Add final<br>colorized image here</div>
                         <div class="photo-caption">Final Colorized Image 2</div>
                     </div>
                 </div>
@@ -410,17 +436,6 @@
                         <div class="photo-caption">Before/After Comparison</div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="notes-section">
-                <h3>Final Results Analysis</h3>
-                <p>Analyze your final colorized images, discussing quality, accuracy, and any remaining challenges or improvements.</p>
-                <ul>
-                    <li>Quality assessment of final images</li>
-                    <li>Comparison with historical references</li>
-                    <li>Remaining artifacts or issues</li>
-                    <li>Future improvements and learnings</li>
-                </ul>
             </div>
         </div>
     </div>
