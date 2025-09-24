@@ -1,8 +1,8 @@
 # Ignore all images except those used in HTML
-proj1/images/**
+!proj1/images/final/
 !proj1/images/final/naive_stack.jpg
 !proj1/images/final/border_stack.jpg
-!proj1/images/smart_border_rem_try1.jpg
+!proj1/images/final/full_run2/
 !proj1/images/final/full_run2/l2_cathedral.jpg
 !proj1/images/final/full_run2/l2_monastery.jpg
 !proj1/images/final/full_run2/l2_tobolsk.jpg
@@ -20,3 +20,4 @@ proj1/images/**
 !proj1/images/final/full_run2/pyramid_seeds.tif.jpg
 !proj1/images/final/full_run2/pyramid_mill.tif.jpg
 !proj1/images/final/full_run2/pyramid_bible.tif.jpg
+!proj1/images/smart_border_rem_try1.jpg
