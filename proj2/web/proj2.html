@@ -329,6 +329,91 @@
         li {
             margin-bottom: 8px;
         }
+
+        /* Print Styles */
+        @media print {
+            /* Hide navigation and UI elements */
+            .sidebar,
+            .toolbar,
+            .bottom-panel,
+            .tabs {
+                display: none !important;
+            }
+
+            /* Show all sections */
+            .section-content {
+                display: block !important;
+                page-break-before: always;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 20px !important;
+            }
+
+            /* First section doesn't need page break */
+            .section-content:first-of-type {
+                page-break-before: auto;
+            }
+
+            /* Print-friendly colors */
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .section-content h2,
+            .section-content h3,
+            .section-content h4 {
+                color: black !important;
+                border-color: black !important;
+            }
+
+            .section-content p {
+                color: black !important;
+            }
+
+            .code-snippet {
+                background: #f5f5f5 !important;
+                border: 1px solid #ccc !important;
+                color: black !important;
+            }
+
+            /* Ensure images are visible */
+            .image-placeholder {
+                background: white !important;
+                border: 1px solid #ccc !important;
+                break-inside: avoid;
+            }
+
+            .image-placeholder img {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            /* Full width for print */
+            .container {
+                display: block !important;
+            }
+
+            .main-content {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .content-display {
+                padding: 0 !important;
+                overflow: visible !important;
+            }
+
+            /* Page breaks for better organization */
+            .image-grid {
+                break-inside: avoid;
+            }
+
+            .image-placeholder {
+                break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -672,11 +757,11 @@ def convolve4l(im1, filt):
                     <h4>Original Aligned Images</h4>
                     <div class="image-grid">
                         <div class="image-placeholder has-image">
-                            <img src="../images/derek_aligned.jpg" alt="Derek Aligned">
+                            <img src="../hybrid_python/derek_aligned.jpg" alt="Derek Aligned">
                             <div class="image-label">Derek Aligned</div>
                         </div>
                         <div class="image-placeholder has-image">
-                            <img src="../images/nutmeg_aligned.jpg" alt="Nutmeg Aligned">
+                            <img src="../hybrid_python/nutmeg_aligned.jpg" alt="Nutmeg Aligned">
                             <div class="image-label">Nutmeg Aligned</div>
                         </div>
                     </div>
@@ -783,11 +868,11 @@ def convolve4l(im1, filt):
                             <div class="image-label">Sriram</div>
                         </div>
                         <div class="image-placeholder has-image">
-                            <img src="../images/chris_on_sriram.png" alt="Chris High + Sriram Low">
+                            <img src="../images/chris_high_sriram_low.png" alt="Chris High + Sriram Low">
                             <div class="image-label">Chris High + Sriram Low</div>
                         </div>
                         <div class="image-placeholder has-image">
-                            <img src="../images/sriram_on_chris.png" alt="Sriram High + Chris Low">
+                            <img src="../images/chris_low_sriram_high.png" alt="Sriram High + Chris Low">
                             <div class="image-label">Sriram High + Chris Low</div>
                         </div>
                     </div>
