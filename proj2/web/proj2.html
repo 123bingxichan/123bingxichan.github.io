@@ -424,49 +424,47 @@
                     
                     <h3>Implementation</h3>
                     <div class="code-snippet">
-# Your convolution implementation code goes here
+<pre><code># Two-loop convolution implementation
 def convolve2l(im1, filt):
-
     if filt.ndim == 1:
-            filt = filt.reshape(1, -1) if len(filt) > 1 else filt.reshape(1, 1)
-        filt = np.flip(filt, axis=(0,1))
-        cx = filt.shape[0] // 2 
-        cy = filt.shape[1] // 2 
-        convolved = np.zeros(in1.shape)
-        padded = np.zeros((in1.shape[0] + 2*cx, in1.shape[1] + 2*cy), dtype = float)
-        padded[cx:-cx, cy:-cy] = in1
-        
-        if cx == 0 and cy == 0:
-            padded = in1
-        elif cx == 0:
-            padded[:, cy:-cy] = in1
-        elif cy == 0:
-            padded[cx:-cx, :] = in1
-        else:
-            padded[cx:-cx, cy:-cy] = in1
+        filt = filt.reshape(1, -1) if len(filt) > 1 else filt.reshape(1, 1)
+    
+    filt = np.flip(filt, axis=(0,1))
+    cx = filt.shape[0] // 2 
+    cy = filt.shape[1] // 2 
+    convolved = np.zeros(im1.shape)
+    padded = np.zeros((im1.shape[0] + 2*cx, im1.shape[1] + 2*cy), dtype=float)
+    
+    if cx == 0 and cy == 0:
+        padded = im1
+    elif cx == 0:
+        padded[:, cy:-cy] = im1
+    elif cy == 0:
+        padded[cx:-cx, :] = im1
+    else:
+        padded[cx:-cx, cy:-cy] = im1
 
-    #convolve entire image
+    # Convolve entire image
     for r in range(padded.shape[0] - (filt.shape[0]-1)):
         for c in range(padded.shape[1] - (filt.shape[1]-1)):
-            #set the item at the correct index to result of using the filter function
-            convolved[r,c] = np.sum(np.multiply(filt,padded[r:r+filt.shape[0], c: c+filt.shape[1]]))
+            convolved[r,c] = np.sum(np.multiply(filt, 
+                padded[r:r+filt.shape[0], c:c+filt.shape[1]]))
 
     return convolved
 
+# Four-loop convolution implementation  
 def convolve4l(im1, filt):
-
-    # *** Preprocessing Implementation not shown***
-
-    #convolve entire image
+    # Preprocessing (padding) implementation not shown
+    
+    # Convolve entire image with four nested loops
     for r in range(padded.shape[0] - (filt.shape[0]-1)):
-    for c in range(padded.shape[1] - (filt.shape[1]-1)):
-        #set the item at the correct index to result of using the filter function
-        filtered = 0
-        for i in range(filt.shape[0]):
-            for j in range(filt.shape[1]):
-                filtered += filt[i,j] * padded[r + i, j + c]
-        convolved[r,c] = filtered
-    return convolved
+        for c in range(padded.shape[1] - (filt.shape[1]-1)):
+            filtered = 0
+            for i in range(filt.shape[0]):
+                for j in range(filt.shape[1]):
+                    filtered += filt[i,j] * padded[r + i, j + c]
+            convolved[r,c] = filtered
+    return convolved</code></pre>
                     </div>
 
                     <h3>Results</h3>
@@ -543,44 +541,23 @@ def convolve4l(im1, filt):
                     <h3>Gaussian Smoothing + Finite Difference</h3>
                     <p>Here are the results of using a gaussian then finding the derivatives.</p>
                     
-                    <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">🌫️</div>
-                            <div>Gaussian Blurred</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">↔️</div>
-                            <div>Blurred ∂/∂x</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">↕️</div>
-                            <div>Blurred ∂/∂y</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">🎯</div>
-                            <div>DoG Edge Result</div>
-                        </div>
-                    </div>
-
-                    <h3>Gaussian Blur Visualization</h3>
-                    <p>Here are the different levels of Gaussian blur applied to the cameraman image:</p>
                     
                     <div class="image-grid">
                         <div class="image-placeholder has-image">
                             <img src="../images/cameraman.png" alt="Original">
-                            <div class="image-label">Original (σ=0)</div>
+                            <div class="image-label">Original (0)</div>
                         </div>
                         <div class="image-placeholder has-image">
-                            <img src="../images/scipy_Gx_cameraman.jpg" alt="Gaussian Blur 1">
-                            <div class="image-label">Gaussian Blur (σ=1)</div>
+                            <img src="../images/scipy_GDx_cameraman.jpg" alt="Gaussian Blur 1">
+                            <div class="image-label">Dx</div>
                         </div>
                         <div class="image-placeholder has-image">
-                            <img src="../images/scipy_Gy_cameraman.jpg" alt="Gaussian Blur 2">
-                            <div class="image-label">Gaussian Blur (σ=2)</div>
+                            <img src="../images/scipy_GDy_cameraman.jpg" alt="Gaussian Blur 2">
+                            <div class="image-label">Dy</div>
                         </div>
                         <div class="image-placeholder has-image">
-                            <img src="../images/grad_mag_cameraman.jpg" alt="Gaussian Blur 3">
-                            <div class="image-label">Gaussian Blur (σ=3)</div>
+                            <img src="../images/scipy_Ggrad_mag_cameraman.jpg" alt="Gaussian Blur 3">
+                            <div class="image-label">Gradient</div>
                         </div>
                     </div>
 
@@ -808,8 +785,6 @@ def convolve4l(im1, filt):
                             <div class="image-label">Sriram High + Chris Low</div>
                         </div>
                     </div>
-
-                    
                 </div>
 
                 <!-- Part 2.3 Content -->
