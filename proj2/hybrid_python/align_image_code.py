@@ -125,16 +125,31 @@ if __name__ == "__main__":
     # 1. load the image
     # 2. align the two images by calling align_images
     # Now you are ready to write your own code for creating hybrid images!
-    chris = skio.imread('../images/chris.jpg')
-    chris = np.rot90(chris, k=-1)
-    #chris = sk.img_as_float(chris)
-    sriram = skio.imread('../images/sriram.jpg')
-    sriram = np.rot90(sriram, k=-1) 
-    #sriram = sk.img_as_float(sriram)
+    
+    #------------------------------------------------------------
+    #align kenta and tsumi
+    
+    ken = sk.img_as_float(skio.imread('../images/kenta.png'))
+    tsumi = sk.img_as_float(skio.imread('../images/tsumi.png'))
+    kenta_align, tsumi_align = align_images(ken, tsumi)
+    plt.imsave("kenta_aligned.png", kenta_align)
+    plt.imsave("tsumi_aligned.png", tsumi_align)
+    
+    #------------------------------------------------------------
+    #align chris and sriram
+    # chris = skio.imread('../images/chris.jpg')
+    # chris = np.rot90(chris, k=-1)
+    # #chris = sk.img_as_float(chris)
+    # sriram = skio.imread('../images/sriram.jpg')
+    # sriram = np.rot90(sriram, k=-1) 
+    # #sriram = sk.img_as_float(sriram)
 
-    chris_align, sriram_align = align_images(chris, sriram)
-    skio.imsave("chris_aligned.jpg", chris_align)
-    skio.imsave("sriram_aligned.jpg", sriram_align)
+    # chris_align, sriram_align = align_images(chris, sriram)
+    # skio.imsave("chris_aligned.jpg", chris_align)
+    # skio.imsave("sriram_aligned.jpg", sriram_align)
+    
+    #------------------------------------------------------------
+    #align derek and cat
     # derek = skio.imread('./DerekPicture.jpg')
     # nutmeg = skio.imread("./nutmeg.jpg")
     
