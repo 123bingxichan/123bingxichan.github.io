@@ -129,11 +129,11 @@ if __name__ == "__main__":
     #------------------------------------------------------------
     #align kenta and tsumi
     
-    ken = sk.img_as_float(skio.imread('../images/kenta.png'))
-    tsumi = sk.img_as_float(skio.imread('../images/tsumi.png'))
-    kenta_align, tsumi_align = align_images(ken, tsumi)
-    plt.imsave("kenta_aligned.png", kenta_align)
-    plt.imsave("tsumi_aligned.png", tsumi_align)
+    campanile = sk.img_as_float(skio.imread('../images/campanile.jpg'))
+    venice = sk.img_as_float(skio.imread('../images/venice.jpg'))
+    campanile_align, venice_align = align_images(campanile, venice)
+    plt.imsave("campanile_aligned.png", campanile_align)
+    plt.imsave("venice_aligned.png", venice_align)
     
     #------------------------------------------------------------
     #align chris and sriram

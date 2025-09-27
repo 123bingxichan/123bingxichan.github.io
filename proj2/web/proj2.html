@@ -219,7 +219,7 @@
 
         .image-placeholder {
             background: #1e1e1e;
-            border: 2px dashed #555;
+            border: 2px solid #555;
             border-radius: 8px;
             height: 300px;
             margin: 20px 0;
@@ -229,12 +229,32 @@
             justify-content: center;
             color: #888;
             font-size: 14px;
-            cursor: pointer;
-            transition: border-color 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .image-placeholder:hover {
+        /* For when you add actual images */
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .image-placeholder.has-image {
             border-color: #0066cc;
+        }
+
+        .image-placeholder .image-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px;
+            font-size: 12px;
+            text-align: center;
         }
 
         .image-placeholder .icon {
@@ -400,99 +420,128 @@
                 <!-- Part 1.1 Content -->
                 <div class="section-content active" id="part1-1">
                     <h2>Part 1.1: Convolutions from Scratch!</h2>
-                    <p>First, let's recap what a convolution is. Implement it with four for loops, then two for loops. Compare it with a built-in convolution function <code>scipy.signal.convolve2d</code>!</p>
+                    <p> Let's implement convolutions with four for loops, then two for loops. I'll compare it with <code>scipy.signal.convolve2d</code>!</p>
                     
                     <h3>Implementation</h3>
                     <div class="code-snippet">
 # Your convolution implementation code goes here
-def convolution_2d(image, kernel):
-    # Four loops implementation
-    pass
+def convolve2l(im1, filt):
 
-def convolution_2d_optimized(image, kernel):
-    # Two loops implementation  
-    pass
+    if filt.ndim == 1:
+            filt = filt.reshape(1, -1) if len(filt) > 1 else filt.reshape(1, 1)
+        filt = np.flip(filt, axis=(0,1))
+        cx = filt.shape[0] // 2 
+        cy = filt.shape[1] // 2 
+        convolved = np.zeros(in1.shape)
+        padded = np.zeros((in1.shape[0] + 2*cx, in1.shape[1] + 2*cy), dtype = float)
+        padded[cx:-cx, cy:-cy] = in1
+        
+        if cx == 0 and cy == 0:
+            padded = in1
+        elif cx == 0:
+            padded[:, cy:-cy] = in1
+        elif cy == 0:
+            padded[cx:-cx, :] = in1
+        else:
+            padded[cx:-cx, cy:-cy] = in1
+
+    #convolve entire image
+    for r in range(padded.shape[0] - (filt.shape[0]-1)):
+        for c in range(padded.shape[1] - (filt.shape[1]-1)):
+            #set the item at the correct index to result of using the filter function
+            convolved[r,c] = np.sum(np.multiply(filt,padded[r:r+filt.shape[0], c: c+filt.shape[1]]))
+
+    return convolved
+
+def convolve4l(im1, filt):
+
+    # *** Preprocessing Implementation not shown***
+
+    #convolve entire image
+    for r in range(padded.shape[0] - (filt.shape[0]-1)):
+    for c in range(padded.shape[1] - (filt.shape[1]-1)):
+        #set the item at the correct index to result of using the filter function
+        filtered = 0
+        for i in range(filt.shape[0]):
+            for j in range(filt.shape[1]):
+                filtered += filt[i,j] * padded[r + i, j + c]
+        convolved[r,c] = filtered
+    return convolved
                     </div>
 
                     <h3>Results</h3>
-                    <p>Take a picture of yourself, write out a 9x9 box filter, and convolve the picture with the box filter.</p>
+                    <p>Here is my selfie and a convolution with my implementation</p>
                     
                     <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">📷</div>
-                            <div>Original Image</div>
-                            <small>Click to upload your photo</small>
+                        <div class="image-placeholder has-image" id="original-photo">
+                            <img src="../images/grayscale_selfie.jpg" alt="Original Selfie" style="transform: rotate(90deg);">
+                            <div class="image-label">Grayscale Selfie</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">⚡</div>
-                            <div>Convolved Image</div>
-                            <small>9x9 box filter result</small>
+                        <div class="image-placeholder has-image" id="convolved-photo">
+                            <img src="../images/convolved_selfie.jpg" alt="Convolved Selfie" style="transform: rotate(90deg);">
+                            <div class="image-label">Convolved Selfie</div>
                         </div>
                     </div>
 
-                    <h3>Comparison with Built-in Function</h3>
-                    <p>Include comparison results and performance analysis between your implementation and scipy.signal.convolve2d.</p>
+                    <h3>And here is a comparison to the scipy version</h3>
+                    <p></p>
                     
-                    <div class="image-placeholder">
-                        <div class="icon">📊</div>
-                        <div>Performance Comparison</div>
-                        <small>Timing and accuracy results</small>
+                    <div class="image-placeholder has-image" id="performance-comparison">
+                        <img src="../images/scipy_selfie.jpg" alt="Scipy Convolution Result" style="transform: rotate(90deg);">
+                        <div class="image-label">Scipy Convolution Result</div>
                     </div>
+
+                <h3>Commentary</h3>
+                <p>
+                    In my implementation, I intially tried to hard code edge detection with dimension math, but then realized padding is a way easier solution, which is to pad by half the width of your convolution window
+                    When comaparing to the scipy implementation, I was glad to see that my colvolved images were nearly identical, but the runtime was definitely significantly slower, probably a minute vs scipy's 0s. 
+                    So from this point on, I was using scipy's convolution, but at least now I can say I've implemented convolutions
+                </p>
                 </div>
 
                 <!-- Part 1.2 Content -->
                 <div class="section-content" id="part1-2">
                     <h2>Part 1.2: Finite Difference Operator</h2>
-                    <p>We will begin by using the humble finite difference as our filter in the x and y directions.</p>
                     
                     <h3>Partial Derivatives</h3>
-                    <p>Show the partial derivative in x and y of the cameraman image by convolving the image with finite difference operators D_x and D_y.</p>
+                    <p>I found the partial derivative in x and y of the cameraman image by convolving the image with finite difference operators D_x and D_y.</p>
                     
                     <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">📷</div>
-                            <div>Original Cameraman</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/cameraman.png" alt="Original Cameraman">
+                            <div class="image-label">Original Cameraman</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">↔️</div>
-                            <div>∂/∂x (x-derivative)</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/scipy_Dx_cameraman.jpg" alt="X-derivative">
+                            <div class="image-label">d/dx (x-derivative)</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">↕️</div>
-                            <div>∂/∂y (y-derivative)</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/scipy_Dy_cameraman.jpg" alt="Y-derivative">
+                            <div class="image-label">d/dy (y-derivative)</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">📐</div>
-                            <div>Gradient Magnitude</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/scipy_gradient_cameraman.jpg" alt="Gradient Magnitude">
+                            <div class="image-label">Gradient Magnitude</div>
                         </div>
                     </div>
 
                     <h3>Edge Detection</h3>
-                    <p>Compute and show the gradient magnitude image. Binarize the gradient magnitude image by picking the appropriate threshold.</p>
+                    <p>I selected the binarization threshold of 0.3 based on testing from 0.1-5, and 0.3 seemed to remove the most noise and keep the most of the camerman</p>
                     
-                    <div class="image-placeholder">
-                        <div class="icon">🎯</div>
-                        <div>Binarized Edge Image</div>
-                        <small>With optimal threshold</small>
+                    <div class="image-placeholder has-image">
+                        <img src="../images/binarized_0.3_cameraman.jpg" alt="Binarized Edge Image">
+                        <div class="image-label">Binarized Edge Image (threshold=0.3)</div>
                     </div>
 
-                    <h3>Code Implementation</h3>
-                    <div class="code-snippet">
-# Finite difference operators
-Dx = np.array([[-1, 1]])
-Dy = np.array([[-1], [1]])
-
-# Your edge detection code here
-                    </div>
                 </div>
 
                 <!-- Part 1.3 Content -->
                 <div class="section-content" id="part1-3">
                     <h2>Part 1.3: Derivative of Gaussian (DoG) Filter</h2>
-                    <p>We noted that the results with just the difference operator were rather noisy. Luckily, we have a smoothing operator handy: the Gaussian filter G.</p>
+                    <p>To remove even more noise, we can blur with a gaussian then find the derivatives.</p>
                     
                     <h3>Gaussian Smoothing + Finite Difference</h3>
-                    <p>Create a blurred version of the original image by convolving with a gaussian and repeat the procedure from the previous part.</p>
+                    <p>Here are the results of using a gaussian then finding the derivatives.</p>
                     
                     <div class="image-grid">
                         <div class="image-placeholder">
@@ -513,125 +562,254 @@ Dy = np.array([[-1], [1]])
                         </div>
                     </div>
 
-                    <h3>Derivative of Gaussian Filters</h3>
-                    <p>Create derivative of gaussian filters by convolving the gaussian with D_x and D_y. Display the resulting DoG filters as images.</p>
+                    <h3>Gaussian Blur Visualization</h3>
+                    <p>Here are the different levels of Gaussian blur applied to the cameraman image:</p>
                     
                     <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">📊</div>
-                            <div>DoG_x Filter</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/cameraman.png" alt="Original">
+                            <div class="image-label">Original (σ=0)</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">📊</div>
-                            <div>DoG_y Filter</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/scipy_Gx_cameraman.jpg" alt="Gaussian Blur 1">
+                            <div class="image-label">Gaussian Blur (σ=1)</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/scipy_Gy_cameraman.jpg" alt="Gaussian Blur 2">
+                            <div class="image-label">Gaussian Blur (σ=2)</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/grad_mag_cameraman.jpg" alt="Gaussian Blur 3">
+                            <div class="image-label">Gaussian Blur (σ=3)</div>
                         </div>
                     </div>
 
-                    <h3>Single Convolution Verification</h3>
-                    <p>Verify that you get the same result as the two-step process using a single convolution with the DoG filters.</p>
+                    <h3>Derivative of Gaussian Filters</h3>
+                    <p>At first I thought I had to calculate the derivative by hand, and was please to then realized I could just convolve with D_x and y. Here are all of my filters</p>
                     
-                    <div class="image-placeholder">
-                        <div class="icon">✅</div>
-                        <div>Single Convolution Result</div>
-                        <small>Should match the two-step process</small>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/gaussian2d_filter.jpg" alt="Gaussian Filter" style="width: 200px; height: 200px; object-fit: contain;">
+                            <div class="image-label">Gaussian Filter</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/dogx_filter.jpg" alt="DoG_x Filter" style="width: 200px; height: 200px; object-fit: contain;">
+                            <div class="image-label">DoG_x Filter</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/dogy_filter.jpg" alt="DoG_y Filter" style="width: 200px; height: 200px; object-fit: contain;">
+                            <div class="image-label">DoG_y Filter</div>
+                        </div>
                     </div>
+
+                    <h3>Single Convolution Verification and comparison</h3>
+                    <p>Verify that you get the same result as the two-step process using a single convolution with the DoG filters, and compare with the two-step process</p>
+                    
+                    <div class="image-placeholder has-image">
+                        <img src="../images/scipy_Ggrad_mag_cameraman.jpg" alt="Two-step Gaussian then gradient">
+                        <div class="image-label">Two-step: Gaussian then gradient</div>
+                    </div>
+                    <div class="image-placeholder has-image">
+                        <img src="../images/scipy_DoG_grad_mag_cameraman.jpg" alt="Single DoG convolution">
+                        <div class="image-label">Single DoG convolution</div>
+                    </div>
+                    <div class="image-placeholder has-image">
+                        <img src="../images/scipy_gradient_cameraman.jpg" alt="Original gradient (no Gaussian)">
+                        <div class="image-label">Original gradient (no Gaussian)</div>
+                    </div>
+                    <p><small>The two-step and single DoG results look exactly the same, proving the convolution property. Compared to the original gradient, the DoG version is much cleaner with less noise.</small></p>
                 </div>
 
                 <!-- Part 2.1 Content -->
                 <div class="section-content" id="part2-1">
                     <h2>Part 2.1: Image "Sharpening"</h2>
-                    <p>Pick your favorite blurry image and get ready to "sharpen" it! We will derive the unsharp masking technique.</p>
+                    <p>First, we sharpen images normally, then we can derive the unsharp masking technique.</p>
+                    
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/taj.png" alt="Original Taj Mahal">
+                            <div class="image-label">Original Taj Mahal</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/taj_lowpass.png" alt="Taj Lowpass">
+                            <div class="image-label">Taj Lowpass</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/taj_highpass.png" alt="Taj Highpass">
+                            <div class="image-label">Taj Highpass</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/taj_sharpened_alpha_3.png" alt="Taj Sharpened">
+                            <div class="image-label">Taj Sharpened (α=3)</div>
+                        </div>
+                    </div>
                     
                     <h3>Unsharp Masking Process</h3>
-                    <p>The unsharp mask filter combines gaussian blurring and high-frequency enhancement to sharpen images.</p>
+                    <p>In the unsharp mask, we use a negative gaussian to in essence 'subtract' the blurred image while we convolve. However, we need to subtract this from something, and we can isolate the 'original' image of the convolution by adding a impulse to the filter.</p>
+
+                    <h3>Sharpening my cat/h3>
+                    <p>Here's the first example of my cats, and I used different sharpening values to see their effect.
+                        I also blurred my cat and then sharpened, and also ended up looking at the effect of a negative alpha.</p>
                     
                     <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">📷</div>
-                            <div>Original Taj Mahal</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/cat_original.png" alt="Cat Original">
+                            <div class="image-label">Cat Original</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">✨</div>
-                            <div>Sharpened Result</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/cat_blur.png" alt="Cat Blurred">
+                            <div class="image-label">Cat Blurred</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/cat_sharpened_alpha_1.png" alt="Cat α=1">
+                            <div class="image-label">Cat Sharpened (α=1)</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/cat_sharpened_alpha_3.png" alt="Cat α=3">
+                            <div class="image-label">Cat Sharpened (α=3)</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/cat_sharpened_alpha_-3.png" alt="Cat α=-3">
+                            <div class="image-label">Cat Sharpened (α=-3)</div>
                         </div>
                     </div>
 
-                    <h3>Your Own Examples</h3>
-                    <p>Show results on other images of your choice.</p>
-                    
-                    <div class="image-placeholder">
-                        <div class="icon">🖼️</div>
-                        <div>Additional Sharpening Examples</div>
-                    </div>
-
-                    <h3>Evaluation Test</h3>
-                    <p>Pick a sharp image, blur it and then try to sharpen it again. Compare the original and the sharpened image.</p>
-                    
-                    <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">📷</div>
-                            <div>Original Sharp</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">🌫️</div>
-                            <div>Artificially Blurred</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">✨</div>
-                            <div>Re-sharpened</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">🔍</div>
-                            <div>Comparison Analysis</div>
-                        </div>
-                    </div>
-                </div>
+                <h3>Commentary</h3>
+                <p>The sharpened image seemed to have more detail, but as alpha increased it seemed to adjust the constrast a lot which ended up looking creepy. Also subtracting the highpass also looks really creepy.</p>
 
                 <!-- Part 2.2 Content -->
                 <div class="section-content" id="part2-2">
                     <h2>Part 2.2: Hybrid Images</h2>
                     <p>The goal is to create hybrid images using the approach described in the SIGGRAPH 2006 paper by Oliva, Torralba, and Schyns.</p>
                     
-                    <h3>Concept</h3>
-                    <p>Hybrid images change in interpretation as a function of viewing distance. High frequency dominates up close, while low frequency dominates from far away.</p>
+                    <h3>Workflow</h3>
+                    <p>I aligned images, then calculated both the high and lowpass of both images and saw which combination looked the best.</p>
                     
                     <h3>Derek and Nutmeg Example</h3>
+                    <h4>Original Aligned Images</h4>
                     <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">👨</div>
-                            <div>Derek (High Freq)</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_aligned.jpg" alt="Derek Aligned">
+                            <div class="image-label">Derek Aligned</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">🐱</div>
-                            <div>Nutmeg (Low Freq)</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">🔄</div>
-                            <div>Hybrid Result</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">📊</div>
-                            <div>Frequency Analysis</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/nutmeg_aligned.jpg" alt="Nutmeg Aligned">
+                            <div class="image-label">Nutmeg Aligned</div>
                         </div>
                     </div>
 
-                    <h3>Your Hybrid Images (2-3 examples)</h3>
-                    <p>Create 2-3 hybrid images with different themes: change of expression, morph between objects, change over time, etc.</p>
-                    
-                    <div class="image-placeholder">
-                        <div class="icon">🎭</div>
-                        <div>Your Hybrid Image Examples</div>
-                        <small>Show input images and hybrid results</small>
+                    <h4>Fourier Transforms of Aligned Images</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_align_fft.jpg" alt="Derek FFT">
+                            <div class="image-label">Derek FFT</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/nutmeg_align_fft.jpg" alt="Nutmeg FFT">
+                            <div class="image-label">Nutmeg FFT</div>
+                        </div>
                     </div>
 
-                    <h3>Frequency Domain Analysis</h3>
-                    <p>For your favorite result, show the log magnitude of the Fourier transform of input images, filtered images, and the hybrid result.</p>
-                    
-                    <div class="image-placeholder">
-                        <div class="icon">📈</div>
-                        <div>FFT Analysis Grid</div>
-                        <small>Log magnitude visualizations</small>
+                    <h4>High and Low Frequency Components</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_highpass.jpg" alt="Derek Highpass">
+                            <div class="image-label">Derek Highpass</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_lowpass.jpg" alt="Derek Lowpass">
+                            <div class="image-label">Derek Lowpass</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/nutmeg_highpass.jpg" alt="Nutmeg Highpass">
+                            <div class="image-label">Nutmeg Highpass</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/nutmeg_lowpass.jpg" alt="Nutmeg Lowpass">
+                            <div class="image-label">Nutmeg Lowpass</div>
+                        </div>
+                    </div>  
+
+                    <p> I chose the cutoff frequency by sweeping with a bunch of different sigmas for the gaussian, and saw that as sigma went from 0-5 definition increased, but past 5 it had immensely diminishing returns.</p>
+                    <h4>Fourier Transforms of High/Low Components</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_highpass_fft.jpg" alt="Derek Highpass FFT">
+                            <div class="image-label">Derek Highpass FFT</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_lowpass_fft.jpg" alt="Derek Lowpass FFT">
+                            <div class="image-label">Derek Lowpass FFT</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/nutmeg_highpass_fft.jpg" alt="Nutmeg Highpass FFT">
+                            <div class="image-label">Nutmeg Highpass FFT</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/nutmeg_lowpass_fft.jpg" alt="Nutmeg Lowpass FFT">
+                            <div class="image-label">Nutmeg Lowpass FFT</div>
+                        </div>
                     </div>
+
+                    <h4>Final Hybrid Images</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_nutmeg_hybrid_dhnl.jpg" alt="Derek High + Nutmeg Low">
+                            <div class="image-label">Derek High + Nutmeg Low</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_nutmeg_hybrid_dlnh.jpg" alt="Derek Low + Nutmeg High">
+                            <div class="image-label">Derek Low + Nutmeg High</div>
+                        </div>
+                    </div>
+
+                    <h4>Grayscale Hybrid Images</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_nutmeg_hybrid_dhnl_gray.jpg" alt="Derek High + Nutmeg Low Gray">
+                            <div class="image-label">Derek High + Nutmeg Low (Gray)</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_nutmeg_hybrid_dlnh_gray.jpg" alt="Derek Low + Nutmeg High Gray">
+                            <div class="image-label">Derek Low + Nutmeg High (Gray)</div>
+                        </div>
+                    </div>
+
+                    <h4>Fourier Transforms of Hybrid Images</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_nutmeg_hybrid_dhnl_fft.jpg" alt="Derek High + Nutmeg Low FFT">
+                            <div class="image-label">Derek High + Nutmeg Low FFT</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/derek_nutmeg_hybrid_dlnh_fft.jpg" alt="Derek Low + Nutmeg High FFT">
+                            <div class="image-label">Derek Low + Nutmeg High FFT</div>
+                        </div>
+                    </div>
+
+                    <h3>Friendbrid </h3>
+                    <p>I created a hybrid of my two friends first, and I hope creating both hybrids since they both worked counts as two images lol</p>
+                    
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/chris.jpg" alt="Chris">
+                            <div class="image-label">Chris</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/sriram.jpg" alt="Sriram">
+                            <div class="image-label">Sriram</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/chris_on_sriram.png" alt="Chris High + Sriram Low">
+                            <div class="image-label">Chris High + Sriram Low</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/sriram_on_chris.png" alt="Sriram High + Chris Low">
+                            <div class="image-label">Sriram High + Chris Low</div>
+                        </div>
+                    </div>
+
+                    
                 </div>
 
                 <!-- Part 2.3 Content -->
@@ -641,25 +819,19 @@ Dy = np.array([[-1], [1]])
                     
                     <h3>Stack Implementation</h3>
                     <p>The difference between a stack and a pyramid is that stacks maintain the original image dimensions at each level.</p>
-                    
-                    <div class="code-snippet">
-# Gaussian and Laplacian stack implementation
-def gaussian_stack(image, levels, sigma):
-    # Your implementation here
-    pass
 
-def laplacian_stack(gaussian_stack):
-    # Your implementation here  
-    pass
-                    </div>
-
-                    <h3>Oraple Stack Visualization</h3>
-                    <p>Apply your stacks to the apple and orange images, recreating Figure 3.42 from Szelski.</p>
+                    <h3>Stack Visualizations</h3>
+                    <p>Here are the stacks for the apple and orange.</p>
                     
-                    <div class="image-placeholder">
-                        <div class="icon">🍎🍊</div>
-                        <div>Gaussian and Laplacian Stacks</div>
-                        <small>Multiple levels showing frequency decomposition</small>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/orange_stack.png" alt="Orange Gaussian and Laplacian Stacks">
+                            <div class="image-label">Orange Gaussian and Laplacian Stacks</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/apple_stack.png" alt="Apple Gaussian and Laplacian Stacks">
+                            <div class="image-label">Apple Gaussian and Laplacian Stacks</div>
+                        </div>
                     </div>
                 </div>
 
@@ -669,52 +841,77 @@ def laplacian_stack(gaussian_stack):
                     <p>Blend two images seamlessly using multiresolution blending as described in the 1983 paper by Burt and Adelson.</p>
                     
                     <h3>The Oraple</h3>
-                    <p>Create the classic apple-orange blend with a vertical seam.</p>
+                    <p>To create the oraple, I had to test out a lot of my windows. Included is the one i used for the oraple</p>
+                    
+                    <h4>Window Testing</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/blur_window_before.png" alt="Window Before">
+                            <div class="image-label">Window Before</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/blur_window_after.png" alt="Window After">
+                            <div class="image-label">Window After</div>
+                        </div>
+                    </div>
+
+                    <h4>Apple, Orange, and Oraple</h4>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/apple.jpeg" alt="Apple">
+                            <div class="image-label">Apple</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/orange.jpeg" alt="Orange">
+                            <div class="image-label">Orange</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/oraple.png" alt="Oraple Result">
+                            <div class="image-label">Oraple Result</div>
+                        </div>
+                    </div>
+
+                    <h3>Campanile and Venice</h3>
+                    <p>Looking out the window of my desk i thought to combine the campanile and the actual campanile in venice.</p>
                     
                     <div class="image-grid">
-                        <div class="image-placeholder">
-                            <div class="icon">🍎</div>
-                            <div>Apple</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/campanile.jpg" alt="Campanile">
+                            <div class="image-label">Campanile</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">🍊</div>
-                            <div>Orange</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/venice.jpg" alt="Venice">
+                            <div class="image-label">Venice</div>
                         </div>
-                        <div class="image-placeholder">
-                            <div class="icon">📐</div>
-                            <div>Mask</div>
-                        </div>
-                        <div class="image-placeholder">
-                            <div class="icon">🍎🍊</div>
-                            <div>Oraple Result</div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/campanile_venice_splined.png" alt="Campanile Venice Splined">
+                            <div class="image-label">Campanile Venice Splined</div>
                         </div>
                     </div>
 
-                    <h3>Irregular Mask Blending</h3>
-                    <p>Blend two pairs of images with irregular masks, as demonstrated in figure 8 of the paper.</p>
+                    <h3>Friend blend</h3>
+                    <p>Finally I decided to put one of my friends faces on my other friend, which I think is the best result so far. To do this i just used a gaussian mask</p>
                     
-                    <div class="image-placeholder">
-                        <div class="icon">🎨</div>
-                        <div>Irregular Mask Examples</div>
-                        <small>2 examples with custom masks</small>
+                    <div class="image-grid">
+                        <div class="image-placeholder has-image">
+                            <img src="../images/chris_aligned.jpg" alt="Chris Aligned">
+                            <div class="image-label">Chris Aligned</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/sriram_aligned.jpg" alt="Sriram Aligned">
+                            <div class="image-label">Sriram Aligned</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/chris_on_sriram.png" alt="Chris on Sriram">
+                            <div class="image-label">Chris on Sriram</div>
+                        </div>
+                        <div class="image-placeholder has-image">
+                            <img src="../images/sriram_on_chris.png" alt="Sriram on Chris">
+                            <div class="image-label">Sriram on Chris</div>
+                        </div>
                     </div>
 
-                    <h3>Creative Blending</h3>
-                    <p>Blend together some crazy ideas of your own!</p>
                     
-                    <div class="image-placeholder">
-                        <div class="icon">💡</div>
-                        <div>Your Creative Blends</div>
-                    </div>
-
-                    <h3>Process Illustration</h3>
-                    <p>Show the Laplacian stack process for your favorite result, similar to Figure 10 in the paper.</p>
-                    
-                    <div class="image-placeholder">
-                        <div class="icon">⚙️</div>
-                        <div>Blending Process Visualization</div>
-                        <small>Laplacian stacks and masked inputs</small>
-                    </div>
                 </div>
             </div>
 
