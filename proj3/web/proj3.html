@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 3 Image Warping and Mosaicing</title>
+    <title>Project 3 - Image Warping and Mosaicing</title>
     <style>
         * {
             margin: 0;
@@ -57,6 +57,53 @@
 
         .back-link:hover {
             color: #2980b9;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .toc h2 {
+            color: #2c3e50;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .toc-section {
+            margin-bottom: 25px;
+        }
+
+        .toc-section h3 {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc-list a:hover {
+            color: #2980b9;
+            text-decoration: underline;
         }
 
         /* Section */
@@ -132,21 +179,7 @@
             background: white;
         }
 
-        /* Placeholder for images */
-        .image-placeholder {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-style: italic;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* Code blocks (optional) */
+        /* Code blocks */
         code {
             background: #f4f4f4;
             padding: 2px 6px;
@@ -181,6 +214,10 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+
+            .toc {
+                padding: 20px 25px;
+            }
         }
     </style>
 </head>
@@ -190,128 +227,237 @@
         
         <div class="header">
             <h1>Project 3</h1>
-            <div class="subtitle">/div>
+            <div class="subtitle">Image Warping and Mosaicing</div>
         </div>
 
-        <!-- Part 1: Defining Correspondences -->
-        <div class="section">
-            <h2>Part A.1</h2>
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h2>Table of Contents</h2>
+            
+            <div class="toc-section">
+                <h3>Part A: Image Warping and Mosaicing</h3>
+                <ul class="toc-list">
+                    <li><a href="#a1">A.1: Shoot and Digitize Pictures</a></li>
+                    <li><a href="#a2">A.2: Recover Homographies</a></li>
+                    <li><a href="#a3">A.3: Warp the Images</a></li>
+                    <li><a href="#a4">A.4: Blend the Images into a Mosaic</a></li>
+                </ul>
+            </div>
+
+            <div class="toc-section">
+                <h3>Part B: Feature Matching for Autostitching</h3>
+                <ul class="toc-list">
+                    <li><a href="#b1">B.1: Harris Corner Detection</a></li>
+                    <li><a href="#b2">B.2: Feature Descriptor Extraction</a></li>
+                    <li><a href="#b3">B.3: Feature Matching</a></li>
+                    <li><a href="#b4">B.4: RANSAC for Robust Homography</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Part A.1 -->
+        <div class="section" id="a1">
+            <h2>Part A.1: Shoot and Digitize Pictures</h2>
             <p>I took photos of the view of my desk, and at two different times with the idea to merge the two timepoints (which may be done in 3B)</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/IMG_5832.jpg" alt="IMG_5832" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5832.jpg" alt="IMG_5832">
                     <div class="image-caption">ORG</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5835.jpg" alt="IMG_5835" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5835.jpg" alt="IMG_5835">
                     <div class="image-caption">WARP</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5846.jpg" alt="IMG_5846" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5846.jpg" alt="IMG_5846">
                     <div class="image-caption">ORG</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5851.jpg" alt="IMG_5851" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5851.jpg" alt="IMG_5851">
                     <div class="image-caption">WARP</div>
                 </div>
-                <p>I also took a picture of my room to make a mosaic.<p>
+            </div>
+            <p>I also took a picture of my room to make a mosaic.</p>
+            <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/IMG_5863.jpg" alt="IMG_5863" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5863.jpg" alt="IMG_5863">
                     <div class="image-caption">ORG</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5864.jpg" alt="IMG_5864" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5864.jpg" alt="IMG_5864">
                     <div class="image-caption">WARP</div>
                 </div>
             </div>
         </div>
 
-        <!-- Part 2: Computing the Mid-way Face -->
-        <div class="section">
-            <h2>Part A.2 Recover Homographies</h2>
+        <!-- Part A.2 -->
+        <div class="section" id="a2">
+            <h2>Part A.2: Recover Homographies</h2>
             <p>I solved for the homographies in discussion and I'll show the results here.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <embed src="../images/homographies.pdf" type="application/pdf" width="100%" height="400px" style="border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);"/>
                     <div class="image-caption">Homographies calculation (PDF)</div>
                 </div>
-                <p>Now here are the correspondents I chose for Evans, and the recovered matrix.</p>
+            </div>
+            <p>Now here are the correspondents I chose for Evans, and the recovered matrix.</p>
+            <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/evans_correspondences.png" alt="Evans Correspondences" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/evans_correspondences.png" alt="Evans Correspondences">
                     <div class="image-caption">Evans: Chosen Correspondences</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/homography_matrix.png" alt="Homography Matrix" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/homography_matrix.png" alt="Homography Matrix">
                     <div class="image-caption">Recovered Homography Matrix</div>
                 </div>
             </div>
         </div>
 
-        <!-- Part 3: The Morph Sequence -->
-        <div class="section">
-            <h2>Part A.3 Warp images</h2>
-            <p>I took a picture of my lab to warp and make my photo square, and also found this minecraft patinting online which I hope to warp so that the image is facing me</p>
+        <!-- Part A.3 -->
+        <div class="section" id="a3">
+            <h2>Part A.3: Warp the Images</h2>
+            <p>I took a picture of my lab to warp and make my photo square, and also found this minecraft painting online which I hope to warp so that the image is facing me</p>
             
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/to_warp.png" alt="To Warp" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/to_warp.png" alt="To Warp">
                     <div class="image-caption">Original image to warp</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/warped_lab.png" alt="Warped Lab" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/warped_lab.png" alt="Warped Lab">
                     <div class="image-caption">Warped lab image (made square)</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/warped_mc.png" alt="Warped Minecraft Painting" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/warped_mc.png" alt="Warped Minecraft Painting">
                     <div class="image-caption">Warped Minecraft painting</div>
-                </div>
                 </div>
             </div>
         </div>
 
-        <div class="section">
-            <h2>Part A.4</h2>
-            <p>I warp the corners of the image to fit, then use that to calculate the offset to build the mosaic, then I use this aligned image and apply weighted mean blending.</div>p>
+        <!-- Part A.4 -->
+        <div class="section" id="a4">
+            <h2>Part A.4: Blend the Images into a Mosaic</h2>
+            <p>I warp the corners of the image to fit, then use that to calculate the offset to build the mosaic, then I use this aligned image and apply weighted mean blending.</p>
             
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/IMG_5832.jpg" alt="IMG_5832" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5832.jpg" alt="IMG_5832">
                     <div class="image-caption">Evans sunset org</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5835.jpg" alt="IMG_5835" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5835.jpg" alt="IMG_5835">
                     <div class="image-caption">Evans sunset warp</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/evans1_mosaic.png" alt="Evans 1 Mosaic" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/evans1_mosaic.png" alt="Evans 1 Mosaic">
                     <div class="image-caption">Evans Mosaic 1</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5846.jpg" alt="IMG_5846" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5846.jpg" alt="IMG_5846">
                     <div class="image-caption">Evans foggy org</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5851.jpg" alt="IMG_5851" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5851.jpg" alt="IMG_5851">
                     <div class="image-caption">Evans foggy warp</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/evans2_mosaic.png" alt="Evans 2 Mosaic" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/evans2_mosaic.png" alt="Evans 2 Mosaic">
                     <div class="image-caption">Evans Mosaic 2</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5863.jpg" alt="IMG_5863" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5863.jpg" alt="IMG_5863">
                     <div class="image-caption">Room org</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/IMG_5864.jpg" alt="IMG_5864" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/IMG_5864.jpg" alt="IMG_5864">
                     <div class="image-caption">Room warp</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/room_mosaic.png" alt="Room Mosaic" style="width:100%; border-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    <img src="../images/room_mosaic.png" alt="Room Mosaic">
                     <div class="image-caption">Room Mosaic</div>
                 </div>
             </div>
         </div>
+
+        <!-- Part B.1 -->
+        <div class="section" id="b1">
+            <h2>Part B.1: Harris Corner Detection</h2>
+
+            <p> I implemented anms according to the paper, and going to discussion really helped with the intuition and understanding of the strength of corners :D. It as nice to see that the points were selected well after anms.</p>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="../images/evans2_harris_corners.png" alt="Harris Corners">
+                    <div class="image-caption">Harris Corners</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/evans2_anms_corners.png" alt="ANMS Corners">
+                    <div class="image-caption">Harris Corners</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part B.2 -->
+        <div class="section" id="b2">
+            <h2>Part B.2: Feature Descriptor Extraction</h2>
+            <p> I implemented Feature description according to the paper, however was a bit confused on whether s=5 would be for sampling the main image or the downsampled image. So I just used spacing of 3 for the downsampled to mimic s=5 on the original. It was also encouraging to see some corresponding features being extracted, like the car in both photos.</p>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="../images/feature_descriptors.png" alt="Feature Descriptors">
+                    <div class="image-caption">Some Feature Descriptors</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/feature_descriptors_squares.png" alt="Feature Descriptors squares">
+                    <div class="image-caption">Approximate area sampled</div>
+                </div>
+                
+            </div>
+        </div>
+        <!-- Part B.3 -->
+        <div class="section" id="b3">
+            <h2>Part B.3: Feature Matching</h2>
+            <p>This was the easiest algorithm to implement, and was nice that it found a good amount of correspondences! However, Evans has reptitive architecture, so I can understand why the features on the actual building would be confused in the algorithm as the descriptors are likely similar. This was another log2 reduction in search size for ransac, going from 500 to 64.</p>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="../images/matched_correspondences.png" alt="Correspondence Matches">
+                    <div class="image-caption">Correspondence Matches</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part B.4 -->
+        <div class="section" id="b4">
+            <h2>Part B.4: RANSAC for Robust Homography</h2>
+            <p>For RANSAC, I had difficulty calculating a correct N to iterate through given I couldn't solve what percentage of my correspondences were actually correct, so I arbitrarily set N=1000. This was also a bit challenging as the outputs to my previous functions were a bit confusing... so a good lesson in software engineering for me. Overall, I'm really glad with the result, and was able to autostitch a plethora of photos I took in the beginning of 3A that would take too long to manually stitch! I was also able to merge two timepoints of photos, one from golden hour and one from a foggy daytime photo. The images are a bit blurry likely due to the low quality of the images and poor blending which could be improved in the future.</p>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="../images/ransac_inliers.png" alt="RANSAC inliers">
+                    <div class="image-caption">RANSAC inliers</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/sunset_auto_mosaic.png" alt="Sunset Auto-Stitched Mosaic">
+                    <div class="image-caption">Sunset Auto-Stitched Mosaic</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/fog_auto_mosaic.png" alt="Foggy Day Auto-Stitched Mosaic">
+                    <div class="image-caption">Foggy Day Auto-Stitched Mosaic</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/sunst_to_fog_auto_mosaic.png" alt="Sunset to Fog Auto-Stitched Mosaic">
+                    <div class="image-caption">Sunset to Fog Auto-Stitched Mosaic</div>
+                </div>
+
+                <p>For comparison, here is the original, manual stitching. I also took a panorama with my phones panorama feature, which I'ce also displayed for comparison.</p>
+                <div class="image-item">
+                    <img src="../images/evans1_mosaic.png" alt="Evans 1 Mosaic">
+                    <div class="image-caption">Manual Mosaic</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/IMG_5841.jpg" alt="Iphone Mosaic">
+                    <div class="image-caption">Iphone Mosaic</div>
+                </div>    
+            </div>
+        </div>
+
     </div>
 </body>
 </html>
