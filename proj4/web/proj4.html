@@ -368,24 +368,37 @@
             <h3>Implementation Overview</h3>
             <p>I implemented a full NeRF pipeline. For ray generation, I convert pixel coordinates to 3D rays using the camera intrinsics and poses. I sample points along each ray between near and far planes, then apply positional encoding to the 3D coordinates (L=10) and view directions (L=4). The NeRF model processes these through an 8-layer MLP with skip connections, outputting density and view-dependent color. Volume rendering integrates these samples along each ray using alpha compositing to produce the final pixel color.</p>
             
-            <h3>Training Progression</h3>
-            <p>I trained the NeRF for 5000 iterations with a batch size of 4096 rays. The model starts completely random, producing noise. By iteration 200, you can see the basic shape starting to form. At 500 iterations, the object structure is visible but blurry. By 1000 iterations, the model has learned most of the geometry and appearance, with fine details continuing to improve through the rest of training.</p>
+            <h3>Visualization of Camera Frustums</h3>
+            <p>The visualization shows the camera positions and frustums for the Lego scene. This helps verify that the camera poses are correct and that the cameras are positioned appropriately around the object.</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part2_train_iter_0.png" alt="Training Iteration 0">
+                    <img src="../images/web/lego_frustum1.png" alt="Lego Camera Frustums Visualization 1">
+                    <div class="image-caption">Lego Camera Frustums Visualization 1</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/web/lego_frustum2.png" alt="Lego Camera Frustums Visualization 2">
+                    <div class="image-caption">Lego Camera Frustums Visualization 2</div>
+                </div>
+            </div>
+            
+            <h3>Training Progression</h3>
+            <p>I trained the NeRF for 5000 iterations with a batch size of 4096 rays. The model starts completely random, producing noise. By iteration 1500, you can see the basic shape starting to form. At 3000 iterations, the object structure is visible and details are becoming clearer. The final result shows the model has learned the geometry and appearance with fine details.</p>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="../images/web/lego_0.png" alt="Training Iteration 0">
                     <div class="image-caption">Iteration 0</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/part2_train_iter_200.png" alt="Training Iteration 200">
-                    <div class="image-caption">Iteration 200</div>
+                    <img src="../images/web/lego_1500.png" alt="Training Iteration 1500">
+                    <div class="image-caption">Iteration 1500</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/part2_train_iter_500.png" alt="Training Iteration 500">
-                    <div class="image-caption">Iteration 500</div>
+                    <img src="../images/web/lego_3000.png" alt="Training Iteration 3000">
+                    <div class="image-caption">Iteration 3000</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/part2_train_iter_1000.png" alt="Training Iteration 1000">
-                    <div class="image-caption">Iteration 1000</div>
+                    <img src="../images/web/lego_final.png" alt="Final Training Result">
+                    <div class="image-caption">Final Result</div>
                 </div>
             </div>
             
@@ -417,7 +430,7 @@
             <h3>Training Loss</h3>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part2_6_training_loss.png" alt="Training Loss">
+                    <img src="../images/web/cube_loss.png" alt="Training Loss">
                     <div class="image-caption">Training Loss Over Iterations</div>
                 </div>
             </div>
@@ -426,16 +439,8 @@
             <p>These renders show the model learning over time. At 500 iterations, the basic shape is visible but very blurry. By 2000 iterations, the geometry is much clearer and colors are more accurate. At 6000 iterations, the model has captured fine details and the rendering quality is quite good, though some areas may still need refinement.</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part2_6_iter_500.png" alt="Iteration 500">
-                    <div class="image-caption">Iteration 500</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part2_6_iter_2000.png" alt="Iteration 2000">
-                    <div class="image-caption">Iteration 2000</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part2_6_iter_6000.png" alt="Iteration 6000">
-                    <div class="image-caption">Iteration 6000</div>
+                    <img src="../images/web/cube_loss.png" alt="Cube Training Loss">
+                    <div class="image-caption">Training Loss for Cube NeRF</div>
                 </div>
             </div>
             
