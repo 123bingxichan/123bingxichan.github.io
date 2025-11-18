@@ -264,12 +264,6 @@
                 </ul>
             </div>
 
-            <div class="toc-section">
-                <h3>Bells & Whistles</h3>
-                <ul class="toc-list">
-                    <li><a href="#bells">Bells & Whistles</a></li>
-                </ul>
-            </div>
         </div>
 
         <!-- Part 0 -->
@@ -287,11 +281,11 @@
             
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/camera_frustums_1.png" alt="Camera Frustums Visualization 1">
+                    <img src="../images/web/frustum1.png" alt="Camera Frustums Visualization 1">
                     <div class="image-caption">Camera Frustums Visualization 1</div>
                 </div>
                 <div class="image-item">
-                    <img src="../images/camera_frustums_2.png" alt="Camera Frustums Visualization 2">
+                    <img src="../images/web/frustum2.png" alt="Camera Frustums Visualization 2">
                     <div class="image-caption">Camera Frustums Visualization 2</div>
                 </div>
             </div>
@@ -307,44 +301,28 @@
             <h3>Model Architecture</h3>
             <p>The 2D neural field takes normalized pixel coordinates (x, y) in [0, 1] as input. I apply sinusoidal positional encoding with L=10 frequency levels, which expands the 2D coordinates into a 42-dimensional vector. This encoded input goes through a 4-layer MLP with hidden dimension 256 and ReLU activations. The output layer uses a sigmoid to produce RGB values in [0, 1]. The model has about 530,000 parameters total.</p>
             
-            <h3>Training Progression</h3>
-            <p>I trained the model for 2000 iterations using Adam optimizer with learning rate 0.01. The model starts with random noise and gradually learns to reconstruct the image. By iteration 500, you can see the basic structure emerging. At 1000 iterations, most details are in place, and by 2000 iterations the reconstruction is quite sharp and accurate.</p>
+            <h3>Training on Test Image (Fox)</h3>
+            <p>I started with the provided test image (fox.png) and trained the model for 2000 iterations using Adam optimizer with learning rate 0.01. The model starts with random noise and gradually learns to reconstruct the image.</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part1_test_iter_0.png" alt="Test Image - Iteration 0">
-                    <div class="image-caption">Iteration 0</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_test_iter_500.png" alt="Test Image - Iteration 500">
-                    <div class="image-caption">Iteration 500</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_test_iter_1000.png" alt="Test Image - Iteration 1000">
-                    <div class="image-caption">Iteration 1000</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_test_iter_2000.png" alt="Test Image - Iteration 2000">
-                    <div class="image-caption">Iteration 2000</div>
+                    <img src="../images/web/fox.png" alt="Original Fox Image">
+                    <div class="image-caption">Original Test Image (Fox)</div>
                 </div>
             </div>
             
-            <p>I also trained the model on a custom image. The training process was similar - the model starts from noise and gradually learns to represent the image. The progression shows how the neural field learns to encode the spatial patterns and colors of the image.</p>
+            <p>After many iterations, the model learned to reconstruct the image. Here's the training progression:</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part1_custom_iter_0.png" alt="Custom Image - Iteration 0">
-                    <div class="image-caption">Iteration 0</div>
+                    <img src="../images/web/fox_iter.png" alt="Fox Training Progression">
+                    <div class="image-caption">Training Progression</div>
                 </div>
+            </div>
+            
+            <h3>Loss Curve for Fox</h3>
+            <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part1_custom_iter_500.png" alt="Custom Image - Iteration 500">
-                    <div class="image-caption">Iteration 500</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_custom_iter_1000.png" alt="Custom Image - Iteration 1000">
-                    <div class="image-caption">Iteration 1000</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_custom_iter_2000.png" alt="Custom Image - Iteration 2000">
-                    <div class="image-caption">Iteration 2000</div>
+                    <img src="../images/web/fox_loss.png" alt="Fox Loss Curve">
+                    <div class="image-caption">Loss/PSNR Curve During Training</div>
                 </div>
             </div>
             
@@ -352,28 +330,33 @@
             <p>I experimented with different combinations of positional encoding frequency (L) and network width (W). Higher L values allow the model to capture finer details but can lead to overfitting. Wider networks (higher W) have more capacity but train slower. The best results came from balancing these - too low and details are lost, too high and training becomes unstable.</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part1_hyperparam_L_low_W_low.png" alt="L=low, W=low">
-                    <div class="image-caption">Low frequency, narrow network - loses fine details</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_hyperparam_L_low_W_high.png" alt="L=low, W=high">
-                    <div class="image-caption">Low frequency, wide network - smoother but still missing details</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_hyperparam_L_high_W_low.png" alt="L=high, W=low">
-                    <div class="image-caption">High frequency, narrow network - captures details but may be noisy</div>
-                </div>
-                <div class="image-item">
-                    <img src="../images/part1_hyperparam_L_high_W_high.png" alt="L=high, W=high">
-                    <div class="image-caption">High frequency, wide network - best detail preservation</div>
+                    <img src="../images/web/fox_hyperparam.png" alt="Hyperparameter Analysis">
+                    <div class="image-caption">Hyperparameter Analysis</div>
                 </div>
             </div>
             
-            <h3>PSNR Curve</h3>
+            <h3>Training on Custom Image (Kirknite)</h3>
+            <p>I also trained the model on a custom image. The training process was similar - the model starts from noise and gradually learns to represent the image.</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part1_psnr_curve.png" alt="PSNR Curve">
-                    <div class="image-caption">PSNR Curve During Training</div>
+                    <img src="../images/web/kirknite.jpg" alt="Original Kirknite Image">
+                    <div class="image-caption">Original Custom Image (Kirknite)</div>
+                </div>
+            </div>
+            
+            <p>After training, here's the result:</p>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="../images/web/nite.png" alt="Nite Training Result">
+                    <div class="image-caption">Training Result</div>
+                </div>
+            </div>
+            
+            <h3>Loss Curve for Custom Image</h3>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="../images/web/nite_loss.png" alt="Nite Loss Curve">
+                    <div class="image-caption">Loss/PSNR Curve During Training</div>
                 </div>
             </div>
         </div>
@@ -384,15 +367,6 @@
             
             <h3>Implementation Overview</h3>
             <p>I implemented a full NeRF pipeline. For ray generation, I convert pixel coordinates to 3D rays using the camera intrinsics and poses. I sample points along each ray between near and far planes, then apply positional encoding to the 3D coordinates (L=10) and view directions (L=4). The NeRF model processes these through an 8-layer MLP with skip connections, outputting density and view-dependent color. Volume rendering integrates these samples along each ray using alpha compositing to produce the final pixel color.</p>
-            
-            <h3>Visualization of Rays and Samples</h3>
-            <p>The visualization shows the camera positions, the rays cast from each camera, and the sample points along those rays. This helps verify that the ray generation is working correctly and that samples are being taken in the right region of space around the object.</p>
-            <div class="image-grid">
-                <div class="image-item">
-                    <img src="../images/part2_rays_samples.png" alt="Rays and Samples Visualization">
-                    <div class="image-caption">Cameras, Rays, and Samples Visualization</div>
-                </div>
-            </div>
             
             <h3>Training Progression</h3>
             <p>I trained the NeRF for 5000 iterations with a batch size of 4096 rays. The model starts completely random, producing noise. By iteration 200, you can see the basic shape starting to form. At 500 iterations, the object structure is visible but blurry. By 1000 iterations, the model has learned most of the geometry and appearance, with fine details continuing to improve through the rest of training.</p>
@@ -418,7 +392,7 @@
             <h3>PSNR Curve on Validation Set</h3>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part2_psnr_curve.png" alt="Validation PSNR Curve">
+                    <img src="../images/web/lego_loss.png" alt="Validation PSNR Curve">
                     <div class="image-caption">PSNR on Validation Set</div>
                 </div>
             </div>
@@ -427,10 +401,7 @@
             <p>The video shows a novel view synthesis by rendering the scene from a camera path that orbits around the object. This demonstrates that the NeRF has learned a complete 3D representation - it can render the object from angles it was never trained on, with proper view-dependent effects like specular highlights.</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <video controls>
-                        <source src="../videos/lego_spherical.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    <img src="../images/web/lego_spherical_rendering.gif" alt="Spherical Rendering of Lego Scene">
                     <div class="image-caption">Spherical Rendering of Lego Scene</div>
                 </div>
             </div>
@@ -472,32 +443,11 @@
             <p>The GIF shows novel view synthesis from the trained NeRF. The camera moves around the object, and the NeRF renders views it was never trained on. This demonstrates that the model has learned a coherent 3D representation of the scene, not just memorized the training views.</p>
             <div class="image-grid">
                 <div class="image-item">
-                    <img src="../images/part2_6_novel_views.gif" alt="Novel Views GIF">
+                    <img src="../images/web/cube_nerf_novel_views.gif" alt="Novel Views GIF">
                     <div class="image-caption">Novel View Rendering</div>
                 </div>
             </div>
         </div>
-
-        <!-- Bells & Whistles -->
-        <div class="section" id="bells">
-            <h2>Bells & Whistles</h2>
-            
-            <h3>CS 280A: Depth Map Video</h3>
-            <p>I extracted depth maps from the NeRF by computing the expected termination depth along each ray. The depth is computed as a weighted sum of sample distances, where weights come from the volume rendering alpha values. The video shows how depth varies as the camera moves, with closer objects appearing brighter and farther objects darker.</p>
-            <div class="image-grid">
-                <div class="image-item">
-                    <video controls>
-                        <source src="../videos/lego_depth_map.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="image-caption">Depth Map Video for Lego Scene</div>
-                </div>
-            </div>
-            
-            <h3>Optional Explorations</h3>
-            <p>I experimented with different learning rates and found that 5e-4 worked well for my dataset. I also tried adjusting the near/far planes based on the scene scale, which helped the model focus on the relevant depth range. The scene scale was relatively small (around 0.3 meters), so I set near/far accordingly.</p>
-        </div>
-
     </div>
 </body>
 </html>
