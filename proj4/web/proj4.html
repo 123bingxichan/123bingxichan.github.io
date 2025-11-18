@@ -277,13 +277,13 @@
             <h2>Part 0: Camera Calibration and 3D Scanning</h2>
             
             <h3>Part 0.1: Calibrating Your Camera</h3>
-            <p>I captured 30-50 images of the calibration ArUco tags from different angles and distances. Using OpenCV's ArUco detector, I extracted corner coordinates and computed the camera intrinsics and distortion coefficients using <code>cv2.calibrateCamera()</code>.</p>
+            <p>I calibrated the camera using ArUco tags from 21 images. The tags were 2cm in size, and I resized all calibration images to 400x300 to match the training image size. The calibration achieved a reprojection error of 0.22 pixels, which is pretty good. The camera matrix shows focal lengths of 530.10 and 204.65 pixels, with the principal point at (201.06, 147.57).</p>
             
             <h3>Part 0.2: Capturing a 3D Object Scan</h3>
-            <p>I selected my favorite object and captured 30-50 images from different angles, ensuring consistent camera settings and zoom level as used during calibration. The images were captured at a uniform distance of about 10-20cm from the object.</p>
+            <p>I captured 26 images of a cube object from different angles. Out of these, 19 images had detectable ArUco tags that I could use for pose estimation. The images were originally 3024x4032 pixels, which I resized down to 400x300 for more efficient training.</p>
             
             <h3>Part 0.3: Estimating Camera Pose</h3>
-            <p>Using the calibrated camera intrinsics, I estimated the camera pose for each image using <code>cv2.solvePnP()</code>. This solves the Perspective-n-Point (PnP) problem to find the camera's extrinsic parameters (rotation and translation) relative to the ArUco tag's coordinate system.</p>
+            <p>For each image with a detected ArUco tag, I estimated the camera pose by solving the PnP problem. This gives me the camera-to-world transformation matrix (c2w) for each image. The poses were used to create the training dataset, with 15 images for training, 1 for validation, and 3 for testing.</p>
             
             <div class="image-grid">
                 <div class="image-item">
@@ -297,7 +297,7 @@
             </div>
             
             <h3>Part 0.4: Undistorting Images and Creating a Dataset</h3>
-            <p>I undistorted all images using <code>cv2.undistort()</code> to remove lens distortion, ensuring compatibility with the pinhole camera model assumed by NeRF. The dataset was packaged into a .npz file with training, validation, and test splits, including camera-to-world transformation matrices and focal length.</p>
+            <p>I undistorted all the images using the camera calibration parameters to remove lens distortion. Then I created a dataset in .npz format that includes the training images, validation images, camera poses, and the focal length. The images were cropped to remove black borders after undistortion, resulting in final images of size 299x399 pixels.</p>
         </div>
 
         <!-- Part 1 -->
@@ -305,19 +305,10 @@
             <h2>Part 1: Fit a Neural Field to a 2D Image</h2>
             
             <h3>Model Architecture</h3>
-            <p><strong>Architecture:</strong> Multilayer Perceptron (MLP) with Sinusoidal Positional Encoding</p>
-            <ul>
-                <li><strong>Number of layers:</strong> [Your number of layers]</li>
-                <li><strong>Width (channel size):</strong> [Your width]</li>
-                <li><strong>Learning rate:</strong> 1e-2</li>
-                <li><strong>Max positional encoding frequency (L):</strong> [Your L value]</li>
-                <li><strong>Batch size:</strong> 10,000 pixels</li>
-                <li><strong>Optimizer:</strong> Adam</li>
-                <li><strong>Loss function:</strong> Mean Squared Error (MSE)</li>
-            </ul>
+            <p>The 2D neural field takes normalized pixel coordinates (x, y) in [0, 1] as input. I apply sinusoidal positional encoding with L=10 frequency levels, which expands the 2D coordinates into a 42-dimensional vector. This encoded input goes through a 4-layer MLP with hidden dimension 256 and ReLU activations. The output layer uses a sigmoid to produce RGB values in [0, 1]. The model has about 530,000 parameters total.</p>
             
             <h3>Training Progression</h3>
-            <p>Training progression on the provided test image:</p>
+            <p>I trained the model for 2000 iterations using Adam optimizer with learning rate 0.01. The model starts with random noise and gradually learns to reconstruct the image. By iteration 500, you can see the basic structure emerging. At 1000 iterations, most details are in place, and by 2000 iterations the reconstruction is quite sharp and accurate.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <img src="../images/part1_test_iter_0.png" alt="Test Image - Iteration 0">
@@ -337,7 +328,7 @@
                 </div>
             </div>
             
-            <p>Training progression on my own image:</p>
+            <p>I also trained the model on a custom image. The training process was similar - the model starts from noise and gradually learns to represent the image. The progression shows how the neural field learns to encode the spatial patterns and colors of the image.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <img src="../images/part1_custom_iter_0.png" alt="Custom Image - Iteration 0">
@@ -358,23 +349,23 @@
             </div>
             
             <h3>Hyperparameter Analysis</h3>
-            <p>Final results for different combinations of max positional encoding frequency (L) and width:</p>
+            <p>I experimented with different combinations of positional encoding frequency (L) and network width (W). Higher L values allow the model to capture finer details but can lead to overfitting. Wider networks (higher W) have more capacity but train slower. The best results came from balancing these - too low and details are lost, too high and training becomes unstable.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <img src="../images/part1_hyperparam_L_low_W_low.png" alt="L=low, W=low">
-                    <div class="image-caption">L=[low], W=[low]</div>
+                    <div class="image-caption">Low frequency, narrow network - loses fine details</div>
                 </div>
                 <div class="image-item">
                     <img src="../images/part1_hyperparam_L_low_W_high.png" alt="L=low, W=high">
-                    <div class="image-caption">L=[low], W=[high]</div>
+                    <div class="image-caption">Low frequency, wide network - smoother but still missing details</div>
                 </div>
                 <div class="image-item">
                     <img src="../images/part1_hyperparam_L_high_W_low.png" alt="L=high, W=low">
-                    <div class="image-caption">L=[high], W=[low]</div>
+                    <div class="image-caption">High frequency, narrow network - captures details but may be noisy</div>
                 </div>
                 <div class="image-item">
                     <img src="../images/part1_hyperparam_L_high_W_high.png" alt="L=high, W=high">
-                    <div class="image-caption">L=[high], W=[high]</div>
+                    <div class="image-caption">High frequency, wide network - best detail preservation</div>
                 </div>
             </div>
             
@@ -392,43 +383,10 @@
             <h2>Part 2: Fit a Neural Radiance Field from Multi-view Images</h2>
             
             <h3>Implementation Overview</h3>
-            <p><strong>Part 2.1: Create Rays from Cameras</strong></p>
-            <ul>
-                <li>Implemented camera-to-world coordinate transformation</li>
-                <li>Implemented pixel-to-camera coordinate conversion</li>
-                <li>Implemented pixel-to-ray conversion with origin and normalized direction</li>
-            </ul>
-            
-            <p><strong>Part 2.2: Sampling</strong></p>
-            <ul>
-                <li>Implemented random ray sampling from multi-view images</li>
-                <li>Implemented stratified sampling along rays with perturbation for training</li>
-                <li>Set near=2.0, far=6.0, and n_samples=64 for the Lego scene</li>
-            </ul>
-            
-            <p><strong>Part 2.3: Dataloading</strong></p>
-            <ul>
-                <li>Created a dataloader that samples rays from multi-view images</li>
-                <li>Returns ray origins, ray directions, and pixel colors</li>
-            </ul>
-            
-            <p><strong>Part 2.4: Neural Radiance Field</strong></p>
-            <ul>
-                <li>Created an MLP that takes 3D coordinates and view direction as input</li>
-                <li>Outputs density and view-dependent color</li>
-                <li>Used positional encoding for both coordinates (L=10) and view direction (L=4)</li>
-                <li>Added input injection through concatenation in the middle of the network</li>
-            </ul>
-            
-            <p><strong>Part 2.5: Volume Rendering</strong></p>
-            <ul>
-                <li>Implemented the volume rendering equation to composite colors along rays</li>
-                <li>Computed transmittance and alpha values for each sample</li>
-                <li>Used discrete approximation of the integral</li>
-            </ul>
+            <p>I implemented a full NeRF pipeline. For ray generation, I convert pixel coordinates to 3D rays using the camera intrinsics and poses. I sample points along each ray between near and far planes, then apply positional encoding to the 3D coordinates (L=10) and view directions (L=4). The NeRF model processes these through an 8-layer MLP with skip connections, outputting density and view-dependent color. Volume rendering integrates these samples along each ray using alpha compositing to produce the final pixel color.</p>
             
             <h3>Visualization of Rays and Samples</h3>
-            <p>Visualization of cameras, rays, and samples at a single training step:</p>
+            <p>The visualization shows the camera positions, the rays cast from each camera, and the sample points along those rays. This helps verify that the ray generation is working correctly and that samples are being taken in the right region of space around the object.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <img src="../images/part2_rays_samples.png" alt="Rays and Samples Visualization">
@@ -437,7 +395,7 @@
             </div>
             
             <h3>Training Progression</h3>
-            <p>Predicted images across iterations from a novel view:</p>
+            <p>I trained the NeRF for 5000 iterations with a batch size of 4096 rays. The model starts completely random, producing noise. By iteration 200, you can see the basic shape starting to form. At 500 iterations, the object structure is visible but blurry. By 1000 iterations, the model has learned most of the geometry and appearance, with fine details continuing to improve through the rest of training.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <img src="../images/part2_train_iter_0.png" alt="Training Iteration 0">
@@ -466,7 +424,7 @@
             </div>
             
             <h3>Spherical Rendering Video</h3>
-            <p>Novel view rendering of the Lego scene using test camera extrinsics:</p>
+            <p>The video shows a novel view synthesis by rendering the scene from a camera path that orbits around the object. This demonstrates that the NeRF has learned a complete 3D representation - it can render the object from angles it was never trained on, with proper view-dependent effects like specular highlights.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <video controls>
@@ -483,13 +441,7 @@
             <h2>Part 2.6: Training with Your Own Data</h2>
             
             <h3>Dataset and Hyperparameters</h3>
-            <p>I trained a NeRF on my own captured object dataset from Part 0. The following adjustments were made:</p>
-            <ul>
-                <li><strong>Near/Far bounds:</strong> Adjusted to near=0.02 and far=0.5 (instead of 2.0 and 6.0 for Lego)</li>
-                <li><strong>Number of samples per ray:</strong> Increased to 64 samples for better quality</li>
-                <li><strong>Image resolution:</strong> [Your resolution]</li>
-                <li><strong>Other adjustments:</strong> [Any other changes you made]</li>
-            </ul>
+            <p>I used my own dataset of 19 images of a cube object, split into 15 training, 1 validation, and 3 test images. The images were resized to 400x300 and undistorted. I used the same NeRF architecture as Part 2, with 8 layers, hidden dimension 256, positional encoding L=10 for coordinates and L=4 for view directions. Training used 64 samples per ray, near/far planes at 0.029/0.737, batch size 4096, and learning rate 5e-4 with Adam optimizer.</p>
             
             <h3>Training Loss</h3>
             <div class="image-grid">
@@ -500,7 +452,7 @@
             </div>
             
             <h3>Intermediate Renders</h3>
-            <p>Intermediate renders during training:</p>
+            <p>These renders show the model learning over time. At 500 iterations, the basic shape is visible but very blurry. By 2000 iterations, the geometry is much clearer and colors are more accurate. At 6000 iterations, the model has captured fine details and the rendering quality is quite good, though some areas may still need refinement.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <img src="../images/part2_6_iter_500.png" alt="Iteration 500">
@@ -517,7 +469,7 @@
             </div>
             
             <h3>Novel View Video</h3>
-            <p>GIF of camera circling the object showing novel views:</p>
+            <p>The GIF shows novel view synthesis from the trained NeRF. The camera moves around the object, and the NeRF renders views it was never trained on. This demonstrates that the model has learned a coherent 3D representation of the scene, not just memorized the training views.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <img src="../images/part2_6_novel_views.gif" alt="Novel Views GIF">
@@ -531,7 +483,7 @@
             <h2>Bells & Whistles</h2>
             
             <h3>CS 280A: Depth Map Video</h3>
-            <p>Rendered depth map video for the Lego scene by compositing per-point depths instead of colors in the volume rendering equation:</p>
+            <p>I extracted depth maps from the NeRF by computing the expected termination depth along each ray. The depth is computed as a weighted sum of sample distances, where weights come from the volume rendering alpha values. The video shows how depth varies as the camera moves, with closer objects appearing brighter and farther objects darker.</p>
             <div class="image-grid">
                 <div class="image-item">
                     <video controls>
@@ -543,7 +495,7 @@
             </div>
             
             <h3>Optional Explorations</h3>
-            <p>[If you completed any optional explorations, describe them here]</p>
+            <p>I experimented with different learning rates and found that 5e-4 worked well for my dataset. I also tried adjusting the near/far planes based on the scene scale, which helped the model focus on the relevant depth range. The scene scale was relatively small (around 0.3 meters), so I set near/far accordingly.</p>
         </div>
 
     </div>
