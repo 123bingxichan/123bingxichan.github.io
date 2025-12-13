@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 5 - Flow Matching and Diffusion Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #2980b9;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .toc h2 {
+            color: #2c3e50;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .toc-section {
+            margin-bottom: 25px;
+        }
+
+        .toc-section h3 {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc-list a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .section h3 {
+            color: #34495e;
+            font-size: 1.3rem;
+            margin: 30px 0 15px 0;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .section ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .section li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        /* Image grid */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .image-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .image-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .image-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .image-item {
+            background: #fafafa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-caption {
+            padding: 15px;
+            font-size: 0.95rem;
+            color: #666;
+            text-align: center;
+            background: white;
+        }
+
+        /* Full width images */
+        .full-width-image {
+            margin: 30px 0;
+            background: #fafafa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .full-width-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Code blocks */
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header {
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 25px 20px;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .image-grid,
+            .image-grid-2,
+            .image-grid-3,
+            .image-grid-4 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .toc {
+                padding: 20px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Portfolio</a>
+        
+        <div class="header">
+            <h1>Project 5</h1>
+            <div class="subtitle">Flow Matching and Diffusion Models</div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h2>Table of Contents</h2>
+            
+            <div class="toc-section">
+                <h3>Part A: The Power of Diffusion Models</h3>
+                <ul class="toc-list">
+                    <li><a href="#parta-0">Part 0: Setup and Text Prompts</a></li>
+                    <li><a href="#parta-1-1">Part 1.1: Forward Process</a></li>
+                    <li><a href="#parta-1-2">Part 1.2: Classical Denoising</a></li>
+                    <li><a href="#parta-1-3">Part 1.3: One-Step Denoising</a></li>
+                    <li><a href="#parta-1-4">Part 1.4: Iterative Denoising</a></li>
+                    <li><a href="#parta-1-5">Part 1.5: Diffusion Model Sampling</a></li>
+                    <li><a href="#parta-1-6">Part 1.6: Classifier-Free Guidance</a></li>
+                    <li><a href="#parta-1-7">Part 1.7: Image-to-Image Translation</a></li>
+                    <li><a href="#parta-1-7-1">Part 1.7.1: Editing Hand-Drawn and Web Images</a></li>
+                    <li><a href="#parta-1-7-2">Part 1.7.2: Inpainting</a></li>
+                    <li><a href="#parta-1-7-3">Part 1.7.3: Text-Conditional Image-to-Image</a></li>
+                    <li><a href="#parta-1-8">Part 1.8: Visual Anagrams</a></li>
+                    <li><a href="#parta-1-9">Part 1.9: Hybrid Images</a></li>
+                </ul>
+            </div>
+
+            <div class="toc-section">
+                <h3>Part B: Flow Matching from Scratch</h3>
+                <ul class="toc-list">
+                    <li><a href="#partb-1-2">Part 1.2: Training a Denoiser</a></li>
+                    <li><a href="#partb-1-2-2">Part 1.2.2: Out-of-Distribution Testing</a></li>
+                    <li><a href="#partb-1-2-3">Part 1.2.3: Denoising Pure Noise</a></li>
+                    <li><a href="#partb-2-2">Part 2.2: Training Time-Conditioned UNet</a></li>
+                    <li><a href="#partb-2-3">Part 2.3: Sampling from Time-Conditioned UNet</a></li>
+                    <li><a href="#partb-2-5">Part 2.5: Training Class-Conditioned UNet</a></li>
+                    <li><a href="#partb-2-6">Part 2.6: Sampling from Class-Conditioned UNet</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Part A: The Power of Diffusion Models -->
+        <div class="section" id="parta-0">
+            <h2>Part A: The Power of Diffusion Models</h2>
+            
+            <h3>Part 0: Setup and Text Prompts</h3>
+            <p>For this project, I used the DeepFloyd IF diffusion model, a two-stage text-to-image model. I generated embeddings for various interesting text prompts to explore the model's capabilities. I used a consistent random seed throughout all experiments to ensure reproducibility.</p>
+            
+            <p>Some of my creative prompts included pairs for visual anagrams and hybrid images, as well as single prompts for general image generation. The model's ability to understand and generate images from text is quite impressive, though the quality varies depending on the complexity of the prompt and the number of inference steps used.</p>
+        </div>
+
+        <!-- Part 1.1 -->
+        <div class="section" id="parta-1-1">
+            <h2>Part 1.1: Implementing the Forward Process</h2>
+            
+            <p>The forward process adds noise to a clean image progressively. I implemented this by sampling from a Gaussian distribution with mean scaled by the clean image and variance determined by the noise schedule. The formula is:</p>
+            
+            <p><code>z_t = sqrt(α̅_t) * x + sqrt(1 - α̅_t) * ε</code></p>
+            
+            <p>where <code>α̅_t</code> is the cumulative product of alphas at timestep t, x is the clean image, and ε is random Gaussian noise.</p>
+            
+            <p>Below are the results showing the Campanile at different noise levels [250, 500, 750]. As expected, the image becomes progressively noisier:</p>
+            
+            <div class="full-width-image">
+                <img src="../images/parta/denoising_comparison.png" alt="Forward Process on Campanile">
+                <div class="image-caption">Campanile at noise levels t=250, 500, 750</div>
+            </div>
+        </div>
+
+        <!-- Part 1.2 -->
+        <div class="section" id="parta-1-2">
+            <h2>Part 1.2: Classical Denoising</h2>
+            
+            <p>I attempted to denoise the noisy Campanile images using classical Gaussian blur filtering. This approach struggles significantly because:</p>
+            <ul>
+                <li>Gaussian blur cannot distinguish between noise and actual image details</li>
+                <li>It uniformly smooths both the noise and the image structure</li>
+                <li>Higher noise levels require stronger blur, which destroys more image detail</li>
+            </ul>
+            
+            <p>The results demonstrate the limitations of classical denoising methods compared to learned approaches:</p>
+            
+            <div class="image-grid-2">
+                <div class="image-item">
+                    <img src="../images/parta/1_2_gauss_denoise.png" alt="Gaussian Denoising Results">
+                    <div class="image-caption">Classical Gaussian Denoising (Poor Results)</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/1_3_gauss_denoise.png" alt="More Gaussian Denoising">
+                    <div class="image-caption">Additional Gaussian Blur Attempts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.3 -->
+        <div class="section" id="parta-1-3">
+            <h2>Part 1.3: One-Step Denoising</h2>
+            
+            <p>Using the pretrained DeepFloyd UNet, I performed one-step denoising by:</p>
+            <ol>
+                <li>Adding noise to the Campanile image at timesteps [250, 500, 750]</li>
+                <li>Using the UNet to estimate the noise in the image</li>
+                <li>Removing the estimated noise (with proper scaling) to recover the original</li>
+            </ol>
+            
+            <p>The UNet does a much better job than Gaussian blur, especially at lower noise levels. However, performance degrades at higher noise levels (t=750) since the problem becomes significantly harder.</p>
+            
+            <div class="full-width-image">
+                <img src="../images/parta/one_step_denoising_results.png" alt="One-Step Denoising Results">
+                <div class="image-caption">One-step denoising at t=250, 500, 750</div>
+            </div>
+        </div>
+
+        <!-- Part 1.4 -->
+        <div class="section" id="parta-1-4">
+            <h2>Part 1.4: Iterative Denoising</h2>
+            
+            <p>Iterative denoising significantly improves results by denoising in small steps. I implemented this using:</p>
+            <ul>
+                <li>Strided timesteps: [990, 960, 930, ..., 30, 0] (stride of 30)</li>
+                <li>Starting from a noisy image at t=300 (i_start=10)</li>
+                <li>Progressively denoising to lower noise levels</li>
+            </ul>
+            
+            <p>The iterative approach works much better because each denoising step only needs to remove a small amount of noise, which is easier than removing all noise at once.</p>
+            
+            <div class="full-width-image">
+                <img src="../images/parta/iterative_denoising_steps.png" alt="Iterative Denoising Steps">
+                <div class="image-caption">Iterative denoising progression (every 5th step shown)</div>
+            </div>
+        </div>
+
+        <!-- Part 1.5 -->
+        <div class="section" id="parta-1-5">
+            <h2>Part 1.5: Diffusion Model Sampling</h2>
+            
+            <p>By starting with pure random noise and iteratively denoising, we can generate images from scratch. I generated 5 samples using the prompt "a high quality photo". The quality isn't spectacular yet (we'll improve this with CFG), but the model does produce coherent images.</p>
+            
+            <div class="full-width-image">
+                <img src="../images/parta/diffusion_sampling_5_images.png" alt="Diffusion Sampling Results">
+                <div class="image-caption">5 samples generated from pure noise</div>
+            </div>
+        </div>
+
+        <!-- Part 1.6 -->
+        <div class="section" id="parta-1-6">
+            <h2>Part 1.6: Classifier-Free Guidance (CFG)</h2>
+            
+            <p>Classifier-Free Guidance dramatically improves image quality by combining conditional and unconditional noise estimates:</p>
+            
+            <p><code>ε̃ = ε_u + γ(ε_c - ε_u)</code></p>
+            
+            <p>where γ is the guidance scale (I used γ=7), ε_c is the conditional estimate, and ε_u is the unconditional estimate. This pushes the generation toward the conditional prompt while maintaining image quality.</p>
+            
+            <div class="full-width-image">
+                <img src="../images/parta/part1_6_cfg_sampling.png" alt="CFG Sampling Results">
+                <div class="image-caption">5 samples with CFG (γ=7) - much higher quality!</div>
+            </div>
+        </div>
+
+        <!-- Part 1.7 -->
+        <div class="section" id="parta-1-7">
+            <h2>Part 1.7: Image-to-Image Translation (SDEdit)</h2>
+            
+            <p>SDEdit allows us to edit images by adding noise and then denoising. The amount of noise controls the strength of the edit - more noise allows larger changes, while less noise preserves more of the original.</p>
+            
+            <p>I tested this on the Campanile using i_start values of [1, 3, 5, 7, 10, 20], which correspond to different amounts of initial noise. Lower i_start means more noise and more dramatic changes:</p>
+            
+            <div class="full-width-image">
+                <img src="../images/parta/part1_7_campanile_sdedit.png" alt="Campanile SDEdit">
+                <div class="image-caption">Campanile edits at different noise levels</div>
+            </div>
+            
+            <p>Here are two additional test images I edited using the same procedure:</p>
+            
+            <div class="image-grid-2">
+                <div class="image-item">
+                    <img src="../images/parta/part1_7_test1_sdedit.png" alt="Test Image 1 SDEdit">
+                    <div class="image-caption">Custom test image 1 - SDEdit results</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/part1_7_test2_sdedit.png" alt="Test Image 2 SDEdit">
+                    <div class="image-caption">Custom test image 2 - SDEdit results</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.7.1 -->
+        <div class="section" id="parta-1-7-1">
+            <h2>Part 1.7.1: Editing Hand-Drawn and Web Images</h2>
+            
+            <p>This technique works particularly well for projecting non-realistic images (sketches, drawings, paintings) onto the natural image manifold. I experimented with both web images and hand-drawn sketches.</p>
+            
+            <h3>Web Images</h3>
+            <div class="image-grid-2">
+                <div class="image-item">
+                    <img src="../images/parta/door.png" alt="Door Web Image">
+                    <div class="image-caption">Door image projection to natural manifold</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/nitekirk.png" alt="Nite Kirk Web Image">
+                    <div class="image-caption">Nite Kirk projection</div>
+                </div>
+            </div>
+            
+            <h3>Hand-Drawn Images</h3>
+            <div class="image-grid-3">
+                <div class="image-item">
+                    <img src="../images/parta/ross1.png" alt="Hand-drawn sketch 1">
+                    <div class="image-caption">Hand-drawn image 1 edits</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/ross2.png" alt="Hand-drawn sketch 2">
+                    <div class="image-caption">Hand-drawn image 2 edits</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/ross3.png" alt="Hand-drawn sketch 3">
+                    <div class="image-caption">Additional hand-drawn edits</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.7.2 -->
+        <div class="section" id="parta-1-7-2">
+            <h2>Part 1.7.2: Inpainting</h2>
+            
+            <p>Inpainting fills in masked regions while preserving unmasked areas. The algorithm works by:</p>
+            <ol>
+                <li>Running the normal denoising loop</li>
+                <li>After each step, replacing pixels outside the mask with the original image (with appropriate noise)</li>
+                <li>This forces the unmasked region to match the original while the model fills in the masked area</li>
+            </ol>
+            
+            <p>I implemented this using the formula: <code>z_t[m == 0] = forward(x_orig, t)[m == 0]</code></p>
+            
+            <div class="image-grid-3">
+                <div class="image-item">
+                    <img src="../images/parta/inpaint_campanile_result.png" alt="Campanile Inpainting">
+                    <div class="image-caption">Campanile inpainted (top section filled)</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/inpaint_custom1_result.png" alt="Custom Inpainting 1">
+                    <div class="image-caption">Custom image 1 inpainting result</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/inpaint_custom2_result.png" alt="Custom Inpainting 2">
+                    <div class="image-caption">Custom image 2 inpainting result</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.7.3 -->
+        <div class="section" id="parta-1-7-3">
+            <h2>Part 1.7.3: Text-Conditional Image-to-Image Translation</h2>
+            
+            <p>This extends SDEdit by using specific text prompts instead of "a high quality photo". This gives us control over how the image is edited - we can guide it toward specific styles or content.</p>
+            
+            <div class="image-grid-3">
+                <div class="image-item">
+                    <img src="../images/parta/part1_7_3_campanile_text_conditioned.png" alt="Text-conditioned Campanile">
+                    <div class="image-caption">Campanile with text conditioning</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/part1_7_3_test1_text_conditioned.png" alt="Text-conditioned test 1">
+                    <div class="image-caption">Test image 1 with text prompts</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/part1_7_3_test2_text_conditioned.png" alt="Text-conditioned test 2">
+                    <div class="image-caption">Test image 2 with text prompts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.8 -->
+        <div class="section" id="parta-1-8">
+            <h2>Part 1.8: Visual Anagrams</h2>
+            
+            <p>Visual anagrams are optical illusions where an image appears as one thing normally but transforms into something else when flipped upside down. I created these by:</p>
+            <ol>
+                <li>Computing noise estimate ε₁ for the image with prompt p₁</li>
+                <li>Flipping the image upside down and computing ε₂ with prompt p₂</li>
+                <li>Flipping ε₂ back and averaging: ε = (ε₁ + flip(ε₂)) / 2</li>
+                <li>Using this combined noise estimate for denoising</li>
+            </ol>
+            
+            <div class="image-grid-2">
+                <div class="image-item">
+                    <img src="../images/parta/visual_anagram_1.png" alt="Visual Anagram 1">
+                    <div class="image-caption">Visual Anagram 1 (try flipping!)</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/visual_anagram_2.png" alt="Visual Anagram 2">
+                    <div class="image-caption">Visual Anagram 2 (flip to reveal)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.9 -->
+        <div class="section" id="parta-1-9">
+            <h2>Part 1.9: Hybrid Images</h2>
+            
+            <p>Hybrid images combine low frequencies from one image with high frequencies from another, creating images that look different from near vs. far. I implemented this by:</p>
+            <ol>
+                <li>Computing noise estimates ε₁ and ε₂ for two different prompts</li>
+                <li>Applying low-pass filter to ε₁ and high-pass filter to ε₂</li>
+                <li>Combining: ε = lowpass(ε₁) + highpass(ε₂)</li>
+            </ol>
+            
+            <p>I used Gaussian blur with kernel size 33 and sigma 2 for the filters.</p>
+            
+            <div class="image-grid-2">
+                <div class="image-item">
+                    <img src="../images/parta/hybrid_fan_palmtree.png" alt="Hybrid Image 1">
+                    <div class="image-caption">Hybrid: Fan (near) / Palm Tree (far)</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/parta/hybrid_rabbit_duck.png" alt="Hybrid Image 2">
+                    <div class="image-caption">Hybrid: Rabbit (near) / Duck (far)</div>
+                </div>
+            </div>
+            
+            <p>View these images from different distances to see the effect!</p>
+        </div>
+
+        <!-- Part B: Flow Matching -->
+        <div class="section" id="partb-1-2">
+            <h2>Part B: Flow Matching from Scratch</h2>
+            
+            <h3>Part 1.2: Training a Single-Step Denoising UNet</h3>
+            
+            <p>I implemented and trained a UNet to denoise MNIST digits with noise level σ=0.5. The architecture consists of downsampling and upsampling blocks with skip connections, using:</p>
+            <ul>
+                <li>Hidden dimension D=128</li>
+                <li>Adam optimizer with learning rate 1e-4</li>
+                <li>Batch size 256</li>
+                <li>5 epochs of training</li>
+            </ul>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/1_2_initial_noise.png" alt="Initial Noisy Images">
+                <div class="image-caption">Test set images with σ=0.5 noise</div>
+            </div>
+            
+            <h3>Training Progress</h3>
+            <p>The model improves significantly from epoch 1 to epoch 5:</p>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/1_2_denoising.png" alt="Denoising Results">
+                <div class="image-caption">Denoising results after epochs 1 and 5</div>
+            </div>
+            
+            <h3>Training Loss Curve</h3>
+            <div class="full-width-image">
+                <img src="../images/partb/1_2_loss.png" alt="Training Loss">
+                <div class="image-caption">Training loss over 5 epochs</div>
+            </div>
+        </div>
+
+        <!-- Part 1.2.2 -->
+        <div class="section" id="partb-1-2-2">
+            <h2>Part 1.2.2: Out-of-Distribution Testing</h2>
+            
+            <p>I tested the denoiser on different noise levels than it was trained on. The model was trained only on σ=0.5, but I tested it on various σ values to see how well it generalizes.</p>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/1_2_ood.png" alt="Out-of-Distribution Results">
+                <div class="image-caption">Performance on different noise levels (OOD testing)</div>
+            </div>
+            
+            <p>The model performs best near σ=0.5 (its training distribution) but degrades for very different noise levels, demonstrating the importance of matching training and test distributions.</p>
+        </div>
+
+        <!-- Part 1.2.3 -->
+        <div class="section" id="partb-1-2-3">
+            <h2>Part 1.2.3: Denoising Pure Noise</h2>
+            
+            <p>When training a denoiser to map pure noise (σ=1.0) to clean images, something interesting happens. With MSE loss, the model learns to predict the mean of all training examples - essentially a blurry "average digit".</p>
+            
+            <p>This occurs because MSE loss finds the point that minimizes squared distances to all training examples, which is the centroid. Since MNIST contains roughly equal numbers of each digit 0-9, the model converges to a blur that represents all digits simultaneously.</p>
+            
+            <div class="image-grid-2">
+                <div class="image-item">
+                    <img src="../images/partb/1_3_epoch1.png" alt="Pure Noise Epoch 1">
+                    <div class="image-caption">Pure noise denoising - Epoch 1</div>
+                </div>
+                <div class="image-item">
+                    <img src="../images/partb/1_3_epoch5.png" alt="Pure Noise Epoch 5">
+                    <div class="image-caption">Pure noise denoising - Epoch 5 (converges to average)</div>
+                </div>
+            </div>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/1_3_noise_gen.png" alt="Pure Noise Generation Loss">
+                <div class="image-caption">Training loss for pure noise denoising</div>
+            </div>
+        </div>
+
+        <!-- Part 2.2 -->
+        <div class="section" id="partb-2-2">
+            <h2>Part 2.2: Training Time-Conditioned UNet</h2>
+            
+            <p>To enable iterative denoising, I added time conditioning to the UNet. This allows the model to know how much noise is present and adjust its denoising accordingly. Key changes:</p>
+            <ul>
+                <li>Added FCBlocks to inject normalized timestep t ∈ [0,1]</li>
+                <li>Hidden dimension reduced to D=64 (faster training)</li>
+                <li>Batch size 64, learning rate 1e-2 with exponential decay (γ=0.9999^(1/300))</li>
+                <li>Training objective: predict flow v_t = x - z_t</li>
+            </ul>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/2_2_loss.png" alt="Time-Conditioned Training Loss">
+                <div class="image-caption">Training loss for time-conditioned UNet</div>
+            </div>
+        </div>
+
+        <!-- Part 2.3 -->
+        <div class="section" id="partb-2-3">
+            <h2>Part 2.3: Sampling from Time-Conditioned UNet</h2>
+            
+            <p>Using the trained time-conditioned UNet, I can now generate MNIST digits from pure noise through iterative denoising. The quality improves with more training epochs:</p>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/2_3_sampling.png" alt="Time-Conditioned Sampling">
+                <div class="image-caption">Sampling results after 1, 5, and 10 epochs</div>
+            </div>
+            
+            <p>The digits are recognizable but not perfect - this is expected for unconditional generation. We'll improve this with class conditioning next.</p>
+        </div>
+
+        <!-- Part 2.5 -->
+        <div class="section" id="partb-2-5">
+            <h2>Part 2.5: Training Class-Conditioned UNet</h2>
+            
+            <p>I added class conditioning to give us control over which digit to generate. The model takes both time t and class c as input:</p>
+            <ul>
+                <li>Class is represented as a one-hot vector (10 dimensions for digits 0-9)</li>
+                <li>10% dropout on class conditioning (set to zero) for classifier-free guidance</li>
+                <li>Same training setup as time-only model</li>
+            </ul>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/2_5_loss.png" alt="Class-Conditioned Training Loss">
+                <div class="image-caption">Training loss for class-conditioned UNet</div>
+            </div>
+        </div>
+
+        <!-- Part 2.6 -->
+        <div class="section" id="partb-2-6">
+            <h2>Part 2.6: Sampling from Class-Conditioned UNet with CFG</h2>
+            
+            <p>Using classifier-free guidance (CFG) with γ=6, I can generate high-quality digits of specific classes. The model only needs 10 epochs to converge thanks to the class conditioning:</p>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/2_6_gamma6.png" alt="Class-Conditioned Sampling">
+                <div class="image-caption">Sampling with CFG (γ=6) - 4 instances of each digit 0-9</div>
+            </div>
+            
+            <h3>Removing the Learning Rate Scheduler</h3>
+            <p>I experimented with removing the exponential learning rate scheduler while maintaining performance. To compensate, I:</p>
+            <ul>
+                <li>Increased the number of training steps to 50,000 (from 10,000)</li>
+                <li>Kept the learning rate constant at 1e-3</li>
+                <li>This allows the model to continue learning without decay</li>
+            </ul>
+            
+            <div class="full-width-image">
+                <img src="../images/partb/2_6_ts50.png" alt="No Scheduler Results">
+                <div class="image-caption">Results without learning rate scheduler (50k steps)</div>
+            </div>
+            
+            <p>The results are comparable to using the scheduler, demonstrating that with enough training steps, we can achieve similar quality without the complexity of exponential decay.</p>
+        </div>
+
+    </div>
+</body>
+</html>
